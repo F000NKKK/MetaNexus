@@ -81,3 +81,7 @@ Install-Package Newtonsoft.Json
 * MetaNexus.Lib.NeuralNetwork.ML: Основная библиотека для работы с нейросетями, включает классы для слоев, нейронных сетей и их конфигурации.
 * MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions: Абстракции для слоев нейросети.
 * MetaNexus.Lib.NeuralNetwork.ML.Models: Модели, которые описывают конфигурацию сети.
+
+## Лицензия
+
+Этот проект распространяется под лицензией **AGPL-3.0**. Подробнее см. в файле [LICENSE](LICENSE).
