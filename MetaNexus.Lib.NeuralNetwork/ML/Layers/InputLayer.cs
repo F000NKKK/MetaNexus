@@ -8,6 +8,10 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers
     /// </summary>
     public class InputLayer : Layer
     {
+        /// <summary>
+        /// Конструктор для входного слоя.
+        /// </summary>
+        /// <param name="size">Количество нейронов во входном слое.</param>
         public InputLayer(int size) : base(size) { }
 
         /// <summary>
