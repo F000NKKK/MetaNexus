@@ -26,7 +26,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Math.Optimizers
                 .ToArray();
 
             var updatedParameters = parameters
-                .Zip(_cache, (param, cache) => param - LearningRate * gradients[Array.IndexOf(parameters, param)] / (float.Sqrt(cache) + _epsilon))
+                .Zip(_cache, (param, cache) => param - LearningRate * gradients[Array.IndexOf(parameters, param)] / (MathF.Sqrt(cache) + _epsilon))
                 .ToArray();
 
             Array.Copy(updatedParameters, parameters, parameters.Length);

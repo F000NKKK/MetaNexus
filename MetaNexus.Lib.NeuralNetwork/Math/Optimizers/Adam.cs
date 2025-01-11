@@ -38,16 +38,16 @@ namespace MetaNexus.Lib.NeuralNetwork.Math.Optimizers
                 .ToArray();
 
             var mCorrected = _m
-                .Select(m => m / (1 - float.Pow(_beta1, _t)))
+                .Select(m => m / (1 - MathF.Pow(_beta1, _t)))
                 .ToArray();
 
             var vCorrected = _v
-                .Select(v => v / (1 - float.Pow(_beta2, _t)))
+                .Select(v => v / (1 - MathF.Pow(_beta2, _t)))
                 .ToArray();
 
             var updatedParameters = parameters
                 .Zip(mCorrected.Zip(vCorrected, (mc, vc) => (mc, vc)),
-                    (param, corrected) => param - LearningRate * corrected.mc / (float.Sqrt(corrected.vc) + _epsilon))
+                    (param, corrected) => param - LearningRate * corrected.mc / (MathF.Sqrt(corrected.vc) + _epsilon))
                 .ToArray();
 
             Array.Copy(updatedParameters, parameters, parameters.Length);

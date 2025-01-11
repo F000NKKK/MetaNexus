@@ -69,7 +69,7 @@
         /// <returns>Модифицированные веса.</returns>
         public static float[] MaxNormRegularization(float[] weights, float maxNorm)
         {
-            float norm = float.Sqrt(weights.Sum(w => w * w));
+            float norm = MathF.Sqrt(weights.Sum(w => w * w));
             if (norm > maxNorm)
             {
                 float scale = maxNorm / norm;

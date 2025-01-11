@@ -12,7 +12,7 @@
         /// <returns>Результат применения ReLU.</returns>
         public static float ReLU(float x)
         {
-            return float.Max(0f, x);
+            return MathF.Max(0f, x);
         }
 
         /// <summary>
@@ -28,7 +28,7 @@
         /// </summary>
         public static float Sigmoid(float x)
         {
-            return 1 / (1 + float.Exp(-x));
+            return 1 / (1 + MathF.Exp(-x));
         }
 
         /// <summary>
@@ -45,7 +45,7 @@
         /// </summary>
         public static float Tanh(float x)
         {
-            return float.Tanh(x);
+            return MathF.Tanh(x);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@
         /// </summary>
         public static float TanhDerivative(float x)
         {
-            return 1 - float.Pow(Tanh(x), 2);
+            return 1 - MathF.Pow(Tanh(x), 2);
         }
     }
 }

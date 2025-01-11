@@ -16,7 +16,7 @@
         /// <returns>Массив инициализированных весов.</returns>
         public static float[] Xavier(int size, int inputSize, int outputSize)
         {
-            float stdDev = float.Sqrt(2.0f / (inputSize + outputSize));
+            float stdDev = MathF.Sqrt(2.0f / (inputSize + outputSize)); // Используем MathF для работы с float
             return Enumerable.Range(0, size)
                 .Select(_ => (float)Random.NextDouble() * stdDev * 2f - stdDev)
                 .ToArray();
@@ -30,7 +30,7 @@
         /// <returns>Массив инициализированных весов.</returns>
         public static float[] He(int size, int inputSize)
         {
-            float stdDev = float.Sqrt(2.0f / inputSize);
+            float stdDev = MathF.Sqrt(2.0f / inputSize); // Используем MathF для работы с float
             return Enumerable.Range(0, size)
                 .Select(_ => (float)Random.NextDouble() * stdDev * 2 - stdDev)
                 .ToArray();

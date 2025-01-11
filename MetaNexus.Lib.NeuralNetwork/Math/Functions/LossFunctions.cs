@@ -13,7 +13,7 @@
         /// <returns>MSE.</returns>
         public static float MeanSquaredError(float[] predictions, float[] targets)
         {
-            return predictions.Zip(targets, (pred, target) => float.Pow(pred - target, 2)).Average();
+            return predictions.Zip(targets, (pred, target) => MathF.Pow(pred - target, 2)).Average();
         }
 
         /// <summary>
@@ -24,7 +24,7 @@
         /// <returns>MAE.</returns>
         public static float MeanAbsoluteError(float[] predictions, float[] targets)
         {
-            return predictions.Zip(targets, (pred, target) => float.Abs(pred - target)).Average();
+            return predictions.Zip(targets, (pred, target) => MathF.Abs(pred - target)).Average();
         }
 
         /// <summary>
@@ -35,7 +35,7 @@
         /// <returns>Кросс-энтропия.</returns>
         public static float CrossEntropy(float[] predictions, float[] targets)
         {
-            return -predictions.Zip(targets, (pred, target) => target * float.Log(pred + 1e-9f)).Sum();
+            return -predictions.Zip(targets, (pred, target) => target * MathF.Log(pred + 1e-9f)).Sum();
         }
     }
 }

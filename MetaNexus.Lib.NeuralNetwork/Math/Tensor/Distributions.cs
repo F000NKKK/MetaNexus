@@ -39,7 +39,7 @@
                     // Используем метод Бокса-Мюллера для генерации нормальных случайных чисел
                     float u1 = (float)(1.0 - Random.NextDouble());
                     float u2 = (float)(1.0 - Random.NextDouble());
-                    float randStdNormal = -2.0f * float.Log(u1) * float.Sin(2.0f * float.Pi * u2);
+                    float randStdNormal = -2.0f * MathF.Log(u1) * MathF.Sin(2.0f * float.Pi * u2);
                     return mean + stdDev * randStdNormal;
                 })
                 .ToArray();
@@ -57,7 +57,7 @@
                 throw new ArgumentException("Параметр λ должен быть положительным.");
 
             return Enumerable.Range(0, size)
-                .Select(_ => -float.Log(1 - (float)Random.NextDouble()) / lambda)
+                .Select(_ => -MathF.Log(1 - (float)Random.NextDouble()) / lambda)
                 .ToArray();
         }
 

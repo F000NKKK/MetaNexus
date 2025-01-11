@@ -16,7 +16,7 @@
             if (predictions.Length != targets.Length)
                 throw new ArgumentException("Размеры предсказаний и истинных значений должны совпадать.");
 
-            return predictions.Zip(targets, (p, t) => float.Pow(p - t, 2)).Average();
+            return predictions.Zip(targets, (p, t) => MathF.Pow(p - t, 2)).Average();
         }
 
         /// <summary>
@@ -30,7 +30,7 @@
             if (predictions.Length != targets.Length)
                 throw new ArgumentException("Размеры предсказаний и истинных значений должны совпадать.");
 
-            return predictions.Zip(targets, (p, t) => float.Abs(p - t)).Average();
+            return predictions.Zip(targets, (p, t) => MathF.Abs(p - t)).Average();
         }
     }
 }
