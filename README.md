@@ -84,4 +84,4 @@ Install-Package Newtonsoft.Json
 
 ## Лицензия
 
-Этот проект распространяется под лицензией **AGPL-3.0**. Подробнее см. в файле [LICENSE](LICENSE).
+Этот проект распространяется под лицензией **AGPL-3.0**. Подробнее см. в файле [LICENSE](https://github.com/F000NKKK/MetaNexus/blob/main/LICENSE.txt).
