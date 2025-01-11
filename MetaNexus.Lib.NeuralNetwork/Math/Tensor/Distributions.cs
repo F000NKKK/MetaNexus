@@ -14,13 +14,13 @@
         /// <param name="max">Максимальное значение.</param>
         /// <param name="size">Количество значений.</param>
         /// <returns>Массив случайных значений из равномерного распределения.</returns>
-        public static double[] Uniform(double min, double max, int size)
+        public static float[] Uniform(float min, float max, int size)
         {
             if (min >= max)
                 throw new ArgumentException("Минимальное значение должно быть меньше максимального.");
 
             return Enumerable.Range(0, size)
-                .Select(_ => min + (max - min) * Random.NextDouble())
+                .Select(_ => min + (max - min) * (float)Random.NextDouble())
                 .ToArray();
         }
 
@@ -31,15 +31,15 @@
         /// <param name="stdDev">Стандартное отклонение.</param>
         /// <param name="size">Количество значений.</param>
         /// <returns>Массив случайных значений из нормального распределения.</returns>
-        public static double[] Normal(double mean, double stdDev, int size)
+        public static float[] Normal(float mean, float stdDev, int size)
         {
             return Enumerable.Range(0, size)
                 .Select(_ =>
                 {
                     // Используем метод Бокса-Мюллера для генерации нормальных случайных чисел
-                    double u1 = 1.0 - Random.NextDouble();
-                    double u2 = 1.0 - Random.NextDouble();
-                    double randStdNormal = double.Sqrt(-2.0 * double.Log(u1)) * double.Sin(2.0 * double.Pi * u2);
+                    float u1 = (float)(1.0 - Random.NextDouble());
+                    float u2 = (float)(1.0 - Random.NextDouble());
+                    float randStdNormal = -2.0f * float.Log(u1) * float.Sin(2.0f * float.Pi * u2);
                     return mean + stdDev * randStdNormal;
                 })
                 .ToArray();
@@ -51,13 +51,13 @@
         /// <param name="lambda">Параметр λ (интенсивность).</param>
         /// <param name="size">Количество значений.</param>
         /// <returns>Массив случайных значений из экспоненциального распределения.</returns>
-        public static double[] Exponential(double lambda, int size)
+        public static float[] Exponential(float lambda, int size)
         {
             if (lambda <= 0)
                 throw new ArgumentException("Параметр λ должен быть положительным.");
 
             return Enumerable.Range(0, size)
-                .Select(_ => -double.Log(1 - Random.NextDouble()) / lambda)
+                .Select(_ => -float.Log(1 - (float)Random.NextDouble()) / lambda)
                 .ToArray();
         }
 
@@ -68,7 +68,7 @@
         /// <param name="p">Вероятность успеха в каждом испытании.</param>
         /// <param name="size">Количество значений.</param>
         /// <returns>Массив случайных значений из биномиального распределения.</returns>
-        public static int[] Binomial(int n, double p, int size)
+        public static int[] Binomial(int n, float p, int size)
         {
             if (n <= 0)
                 throw new ArgumentException("Число испытаний должно быть положительным.");
@@ -81,7 +81,7 @@
                     int successes = 0;
                     for (int i = 0; i < n; i++)
                     {
-                        if (Random.NextDouble() < p)
+                        if ((float)Random.NextDouble() < p)
                             successes++;
                     }
                     return successes;

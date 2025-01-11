@@ -10,15 +10,15 @@
         /// </summary>
         /// <param name="x">Входное значение.</param>
         /// <returns>Результат применения ReLU.</returns>
-        public static double ReLU(double x)
+        public static float ReLU(float x)
         {
-            return double.Max(0, x);
+            return float.Max(0f, x);
         }
 
         /// <summary>
         /// Производная активационной функции ReLU.
         /// </summary>
-        public static double ReLUDerivative(double x)
+        public static float ReLUDerivative(float x)
         {
             return x > 0 ? 1 : 0;
         }
@@ -26,34 +26,34 @@
         /// <summary>
         /// Активационная функция Sigmoid.
         /// </summary>
-        public static double Sigmoid(double x)
+        public static float Sigmoid(float x)
         {
-            return 1 / (1 + double.Exp(-x));
+            return 1 / (1 + float.Exp(-x));
         }
 
         /// <summary>
         /// Производная функции Sigmoid.
         /// </summary>
-        public static double SigmoidDerivative(double x)
+        public static float SigmoidDerivative(float x)
         {
-            double sigmoid = Sigmoid(x);
+            float sigmoid = Sigmoid(x);
             return sigmoid * (1 - sigmoid);
         }
 
         /// <summary>
         /// Активационная функция Tanh.
         /// </summary>
-        public static double Tanh(double x)
+        public static float Tanh(float x)
         {
-            return double.Tanh(x);
+            return float.Tanh(x);
         }
 
         /// <summary>
         /// Производная функции Tanh.
         /// </summary>
-        public static double TanhDerivative(double x)
+        public static float TanhDerivative(float x)
         {
-            return 1 - double.Pow(Tanh(x), 2);
+            return 1 - float.Pow(Tanh(x), 2);
         }
     }
 }

@@ -11,9 +11,9 @@
         /// <param name="predictions">Предсказанные значения.</param>
         /// <param name="targets">Истинные значения.</param>
         /// <returns>MSE.</returns>
-        public static double MeanSquaredError(double[] predictions, double[] targets)
+        public static float MeanSquaredError(float[] predictions, float[] targets)
         {
-            return predictions.Zip(targets, (pred, target) => double.Pow(pred - target, 2)).Average();
+            return predictions.Zip(targets, (pred, target) => float.Pow(pred - target, 2)).Average();
         }
 
         /// <summary>
@@ -22,9 +22,9 @@
         /// <param name="predictions">Предсказанные значения.</param>
         /// <param name="targets">Истинные значения.</param>
         /// <returns>MAE.</returns>
-        public static double MeanAbsoluteError(double[] predictions, double[] targets)
+        public static float MeanAbsoluteError(float[] predictions, float[] targets)
         {
-            return predictions.Zip(targets, (pred, target) => double.Abs(pred - target)).Average();
+            return predictions.Zip(targets, (pred, target) => float.Abs(pred - target)).Average();
         }
 
         /// <summary>
@@ -33,9 +33,9 @@
         /// <param name="predictions">Предсказанные значения.</param>
         /// <param name="targets">Истинные значения.</param>
         /// <returns>Кросс-энтропия.</returns>
-        public static double CrossEntropy(double[] predictions, double[] targets)
+        public static float CrossEntropy(float[] predictions, float[] targets)
         {
-            return -predictions.Zip(targets, (pred, target) => target * double.Log(pred + 1e-9)).Sum();
+            return -predictions.Zip(targets, (pred, target) => target * float.Log(pred + 1e-9f)).Sum();
         }
     }
 }

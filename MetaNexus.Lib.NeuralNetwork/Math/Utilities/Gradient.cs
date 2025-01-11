@@ -12,14 +12,14 @@
         /// <param name="x">Точка, в которой вычисляется градиент.</param>
         /// <param name="epsilon">Шаг для конечных разностей.</param>
         /// <returns>Градиент в виде массива значений.</returns>
-        public static double[] Compute(Func<double[], double> function, double[] x, double epsilon = 1e-5)
+        public static float[] Compute(Func<float[], float> function, float[] x, float epsilon = 1e-5f)
         {
-            var gradient = new double[x.Length];
+            var gradient = new float[x.Length];
 
             for (int i = 0; i < x.Length; i++)
             {
-                var xPlus = (double[])x.Clone();
-                var xMinus = (double[])x.Clone();
+                var xPlus = (float[])x.Clone();
+                var xMinus = (float[])x.Clone();
 
                 xPlus[i] += epsilon;
                 xMinus[i] -= epsilon;

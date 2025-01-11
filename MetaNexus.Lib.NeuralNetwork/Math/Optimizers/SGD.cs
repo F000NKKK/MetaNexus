@@ -4,12 +4,12 @@ namespace MetaNexus.Lib.NeuralNetwork.Math.Optimizers
 {
     public class SGD : Optimizer
     {
-        public SGD(double learningRate) : base(learningRate) { }
+        public SGD(float learningRate) : base(learningRate) { }
 
         /// <summary>
         /// Обновление параметров с использованием SGD.
         /// </summary>
-        public override void Update(double[] parameters, double[] gradients)
+        public override void Update(float[] parameters, float[] gradients)
         {
             var updatedParameters = parameters
                 .Zip(gradients, (param, grad) => param - LearningRate * grad)

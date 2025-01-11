@@ -14,11 +14,11 @@
         /// <param name="inputSize">Размер входного слоя.</param>
         /// <param name="outputSize">Размер выходного слоя.</param>
         /// <returns>Массив инициализированных весов.</returns>
-        public static double[] Xavier(int size, int inputSize, int outputSize)
+        public static float[] Xavier(int size, int inputSize, int outputSize)
         {
-            double stdDev = double.Sqrt(2.0 / (inputSize + outputSize));
+            float stdDev = float.Sqrt(2.0f / (inputSize + outputSize));
             return Enumerable.Range(0, size)
-                .Select(_ => Random.NextDouble() * stdDev * 2 - stdDev)
+                .Select(_ => (float)Random.NextDouble() * stdDev * 2f - stdDev)
                 .ToArray();
         }
 
@@ -28,11 +28,11 @@
         /// <param name="size">Размер массива весов.</param>
         /// <param name="inputSize">Размер входного слоя.</param>
         /// <returns>Массив инициализированных весов.</returns>
-        public static double[] He(int size, int inputSize)
+        public static float[] He(int size, int inputSize)
         {
-            double stdDev = double.Sqrt(2.0 / inputSize);
+            float stdDev = float.Sqrt(2.0f / inputSize);
             return Enumerable.Range(0, size)
-                .Select(_ => Random.NextDouble() * stdDev * 2 - stdDev)
+                .Select(_ => (float)Random.NextDouble() * stdDev * 2 - stdDev)
                 .ToArray();
         }
 
@@ -43,10 +43,10 @@
         /// <param name="min">Минимальное значение.</param>
         /// <param name="max">Максимальное значение.</param>
         /// <returns>Массив инициализированных весов.</returns>
-        public static double[] RandomUniform(int size, double min, double max)
+        public static float[] RandomUniform(int size, float min, float max)
         {
             return Enumerable.Range(0, size)
-                .Select(_ => min + (max - min) * Random.NextDouble())
+                .Select(_ => min + (max - min) * (float)Random.NextDouble())
                 .ToArray();
         }
     }

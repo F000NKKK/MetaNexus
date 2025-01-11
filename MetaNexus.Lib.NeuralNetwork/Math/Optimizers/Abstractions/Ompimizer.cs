@@ -8,13 +8,13 @@
         /// <summary>
         /// Скорость обучения.
         /// </summary>
-        protected double LearningRate { get; set; }
+        protected float LearningRate { get; set; }
 
         /// <summary>
         /// Конструктор оптимизатора.
         /// </summary>
         /// <param name="learningRate">Начальная скорость обучения.</param>
-        protected Optimizer(double learningRate)
+        protected Optimizer(float learningRate)
         {
             LearningRate = learningRate;
         }
@@ -24,6 +24,6 @@
         /// </summary>
         /// <param name="parameters">Параметры модели.</param>
         /// <param name="gradients">Градиенты параметров.</param>
-        public abstract void Update(double[] parameters, double[] gradients);
+        public abstract void Update(float[] parameters, float[] gradients);
     }
 }

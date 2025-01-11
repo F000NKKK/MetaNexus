@@ -4,28 +4,28 @@ namespace MetaNexus.Lib.NeuralNetwork.Math.Optimizers
 {
     public class Adam : Optimizer
     {
-        private readonly double _beta1;
-        private readonly double _beta2;
-        private readonly double _epsilon;
-        private double[] _m;
-        private double[] _v;
+        private readonly float _beta1;
+        private readonly float _beta2;
+        private readonly float _epsilon;
+        private float[] _m;
+        private float[] _v;
         private int _t;
 
-        public Adam(double learningRate, int parameterSize, double beta1 = 0.9, double beta2 = 0.999, double epsilon = 1e-8)
+        public Adam(float learningRate, int parameterSize, float beta1 = 0.9f, float beta2 = 0.999f, float epsilon = 1e-8f)
             : base(learningRate)
         {
             _beta1 = beta1;
             _beta2 = beta2;
             _epsilon = epsilon;
-            _m = new double[parameterSize];
-            _v = new double[parameterSize];
+            _m = new float[parameterSize];
+            _v = new float[parameterSize];
             _t = 0;
         }
 
         /// <summary>
         /// Обновление параметров с использованием Adam.
         /// </summary>
-        public override void Update(double[] parameters, double[] gradients)
+        public override void Update(float[] parameters, float[] gradients)
         {
             _t++;
 
@@ -38,16 +38,16 @@ namespace MetaNexus.Lib.NeuralNetwork.Math.Optimizers
                 .ToArray();
 
             var mCorrected = _m
-                .Select(m => m / (1 - double.Pow(_beta1, _t)))
+                .Select(m => m / (1 - float.Pow(_beta1, _t)))
                 .ToArray();
 
             var vCorrected = _v
-                .Select(v => v / (1 - double.Pow(_beta2, _t)))
+                .Select(v => v / (1 - float.Pow(_beta2, _t)))
                 .ToArray();
 
             var updatedParameters = parameters
                 .Zip(mCorrected.Zip(vCorrected, (mc, vc) => (mc, vc)),
-                    (param, corrected) => param - LearningRate * corrected.mc / (double.Sqrt(corrected.vc) + _epsilon))
+                    (param, corrected) => param - LearningRate * corrected.mc / (float.Sqrt(corrected.vc) + _epsilon))
                 .ToArray();
 
             Array.Copy(updatedParameters, parameters, parameters.Length);

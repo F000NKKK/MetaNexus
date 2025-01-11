@@ -141,14 +141,14 @@ namespace MetaNexus.Lib.NeuralNetwork.Math.Tensor
         /// <returns>Новый тензор, являющийся результатом возведения в степень.</returns>
         public static Tensor<T> Power<T>(Tensor<T> a, T exponent) where T : INumber<T>
         {
-            // Преобразуем степень в double для работы с дробными значениями
-            var exponentDouble = Convert.ToDouble(exponent);
+            // Преобразуем степень в float для работы с дробными значениями
+            var exponentFloat = (float)Convert.ToDouble(exponent);
 
             var resultData = a.Data.Select(x =>
             {
-                double value = Convert.ToDouble(x); // Преобразуем каждый элемент в double
+                float value = (float)Convert.ToDouble(x); // Преобразуем каждый элемент в float
 
-                double result = double.Pow(value, exponentDouble);
+                float result = float.Pow(value, exponentFloat);
 
                 return (T)Convert.ChangeType(result, typeof(T));
             }).ToArray();
