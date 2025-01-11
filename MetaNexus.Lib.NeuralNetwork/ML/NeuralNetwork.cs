@@ -9,9 +9,6 @@ using System.IO;
 
 namespace MetaNexus.Lib.NeuralNetwork.ML
 {
-    /// <summary>
-    /// Класс, представляющий нейронную сеть, которая строится на основе конфигурации из JSON и бинарных данных для весов.
-    /// </summary>
     public class NeuralNetwork : INetwork
     {
         public List<Layer> Layers { get; private set; }
@@ -25,23 +22,13 @@ namespace MetaNexus.Lib.NeuralNetwork.ML
             var config = JsonConvert.DeserializeObject<NetworkConfig>(json);
             Layers = new List<Layer>();
 
+            int inputSize = config.InputSize;  // Размер входных данных
+
             foreach (var layerConfig in config.Layers)
             {
-                Layer layer = null;
-
-                switch (layerConfig.Type.ToLower())
-                {
-                    case "input":
-                        layer = new InputLayer(layerConfig.Size);
-                        break;
-                    case "dense":
-                        layer = new DenseLayer(layerConfig.Size, layerConfig.Activation);
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Неизвестный тип слоя: {layerConfig.Type}");
-                }
-
+                Layer layer = CreateLayerFromConfig(layerConfig, inputSize);
                 Layers.Add(layer);
+                inputSize = layer.Size;  // Устанавливаем новый inputSize для следующего слоя
             }
         }
 
@@ -56,46 +43,53 @@ namespace MetaNexus.Lib.NeuralNetwork.ML
             var config = JsonConvert.DeserializeObject<NetworkConfig>(json);
             Layers = new List<Layer>();
 
+            int inputSize = config.InputSize;  // Размер входных данных
+
             foreach (var layerConfig in config.Layers)
             {
-                Layer layer = null;
-
-                switch (layerConfig.Type.ToLower())
-                {
-                    case "input":
-                        layer = new InputLayer(layerConfig.Size);
-                        break;
-                    case "dense":
-                        layer = new DenseLayer(layerConfig.Size, layerConfig.Activation);
-                        break;
-                    default:
-                        throw new InvalidOperationException($"Неизвестный тип слоя: {layerConfig.Type}");
-                }
-
+                Layer layer = CreateLayerFromConfig(layerConfig, inputSize);
                 Layers.Add(layer);
+                inputSize = layer.Size;  // Устанавливаем новый inputSize для следующего слоя
             }
 
             if (loadWeights)
             {
-                if (!File.Exists(binaryFilePath))
-                {
-                    throw new FileNotFoundException($"Не удалось найти бинарный файл: {binaryFilePath}");
-                }
-
-                using (FileStream fs = new FileStream(binaryFilePath, FileMode.Open))
-                {
-                    var reader = new BinaryReader(fs);
-
-                    // Загрузка весов и смещений из бинарного файла для каждого слоя
-                    foreach (var layer in Layers)
-                    {
-                        layer.LoadWeights(fs);
-                    }
-                }
+                LoadWeightsFromFile(binaryFilePath);
             }
             else
             {
                 throw new InvalidOperationException("Для загрузки весов необходимо передать путь к бинарному файлу.");
+            }
+        }
+
+        private Layer CreateLayerFromConfig(LayerConfig layerConfig, int inputSize)
+        {
+            switch (layerConfig.Type.ToLower())
+            {
+                case "input":
+                    return new InputLayer(inputSize);  // Используем inputSize для первого слоя
+                case "dense":
+                    return new DenseLayer(inputSize, layerConfig.Size, layerConfig.Activation);  // Передаем inputSize для Dense
+                default:
+                    throw new InvalidOperationException($"Неизвестный тип слоя: {layerConfig.Type}");
+            }
+        }
+
+        private void LoadWeightsFromFile(string binaryFilePath)
+        {
+            if (!File.Exists(binaryFilePath))
+            {
+                throw new FileNotFoundException($"Не удалось найти бинарный файл: {binaryFilePath}");
+            }
+
+            using (FileStream fs = new FileStream(binaryFilePath, FileMode.Open))
+            {
+                var reader = new BinaryReader(fs);
+
+                foreach (var layer in Layers)
+                {
+                    layer.LoadWeights(reader);
+                }
             }
         }
 
@@ -111,6 +105,7 @@ namespace MetaNexus.Lib.NeuralNetwork.ML
             foreach (var layer in Layers)
             {
                 output = layer.Forward(output);
+                Console.WriteLine($"Выход после слоя {layer.GetType().Name}: {string.Join(", ", output)}");
             }
 
             return output;
@@ -133,6 +128,7 @@ namespace MetaNexus.Lib.NeuralNetwork.ML
                 {
                     // Сохраняем информацию о слое: размер и тип
                     writer.Write(layer.Size);
+
                     writer.Write(layer.GetType().Name.ToLower());
 
                     if (layer is DenseLayer denseLayer)
@@ -142,7 +138,7 @@ namespace MetaNexus.Lib.NeuralNetwork.ML
                     }
 
                     // Сохраняем веса слоя
-                    layer.SaveWeights(fs); // Восстановление функции для записи весов
+                    layer.SaveWeights(writer);
                 }
             }
         }

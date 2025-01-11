@@ -1,106 +1,99 @@
 ﻿namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
 {
-    /// <summary>
-    /// Абстрактный класс для слоя нейронной сети.
-    /// </summary>
     public abstract class Layer
     {
-        /// <summary>
-        /// Смещения (bias) для каждого нейрона в слое.
-        /// </summary>
         public float[] Biases { get; private set; }
-
-        /// <summary>
-        /// Веса для каждого нейрона в слое.
-        /// </summary>
-        public float[] Weights { get; private set; }
-
-        /// <summary>
-        /// Количество нейронов в слое.
-        /// </summary>
+        public float[,] Weights { get; private set; }
         public int Size { get; protected set; }
+        public int InputSize { get; protected set; }
 
-        /// <summary>
-        /// Конструктор для слоя.
-        /// </summary>
-        /// <param name="size">Количество нейронов в слое. Значение должно быть больше нуля.</param>
-        /// <exception cref="ArgumentException">Если размер слоя меньше или равен нулю.</exception>
-        public Layer(int size)
+        public Layer(int inputSize, int size)
         {
             if (size <= 0)
                 throw new ArgumentException("Размер слоя должен быть положительным числом.");
 
             Size = size;
-            InitializeWeights(); // Инициализация весов и смещений
+            InputSize = inputSize;
+
+            InitializeWeights();
         }
 
-        /// <summary>
-        /// Метод для выполнения прямого прохода через слой.
-        /// </summary>
-        /// <param name="input">Входные данные для слоя.</param>
-        /// <returns>Выходные данные после прохождения через слой.</returns>
+        public Layer(int inputSize)
+        {
+            if (inputSize <= 0)
+                throw new ArgumentException("Размер слоя должен быть положительным числом.");
+
+            Size = inputSize;
+            InputSize = inputSize;
+
+            InitializeWeights();
+        }
+
         public abstract float[] Forward(float[] input);
 
-        /// <summary>
-        /// Инициализация весов и смещений случайными значениями.
-        /// </summary>
         private void InitializeWeights()
         {
-            Random random = new Random();
-            Weights = new float[Size];  // Пример: каждый нейрон имеет свой вес
-            Biases = new float[Size];   // Смещения для каждого нейрона
+            Random random = new Random(DateTime.Now.Millisecond);
+            Weights = new float[InputSize, Size];
+            Console.WriteLine("Инициализация весов:");
 
-            for (int i = 0; i < Size; i++)
+            for (int i = 0; i < InputSize; i++)
             {
-                Weights[i] = (float)(random.NextDouble() * 2.0 - 1.0);  // Инициализация случайными числами от -1 до 1
-                Biases[i] = 0f;  // Инициализация смещений в ноль
+                for (int j = 0; j < Size; j++)
+                {
+                    Weights[i, j] = (float)(random.NextDouble() * 2.0 - 1.0);
+                    // Логирование значений весов
+                    Console.WriteLine($"Вес для (нейрон {i}, {j}): {Weights[i, j]}");
+                }
+            }
+
+            // Инициализация смещений
+            Biases = Enumerable.Range(0, Size)
+                               .Select(_ => (float)(random.NextDouble() * 2.0 - 1.0))
+                               .ToArray();
+
+            // Логирование значений смещений
+            Console.WriteLine("Инициализация смещений:");
+            foreach (var bias in Biases)
+            {
+                Console.WriteLine($"Смещение: {bias}");
             }
         }
 
-        /// <summary>
-        /// Сохранение весов и смещений слоя в бинарный файл.
-        /// </summary>
-        /// <param name="fs">Поток для записи в файл.</param>
-        public void SaveWeights(FileStream fs)
+        public void SaveWeights(BinaryWriter writer)
         {
-            using (var writer = new BinaryWriter(fs))
+            foreach (var weight in Weights)
             {
-                // Сохраняем веса
-                foreach (var weight in Weights)
-                {
-                    writer.Write(weight);
-                }
-
-                // Сохраняем смещения
-                foreach (var bias in Biases)
-                {
-                    writer.Write(bias);
-                }
+                writer.Write(weight);
             }
+
+            Biases.ToList().ForEach(bias => writer.Write(bias));
         }
 
-        /// <summary>
-        /// Загрузка весов и смещений слоя из бинарного файла.
-        /// </summary>
-        /// <param name="fs">Поток для чтения из файла.</param>
-        public void LoadWeights(FileStream fs)
+        public void LoadWeights(BinaryReader reader)
         {
-            using (var reader = new BinaryReader(fs))
+            for (int i = 0; i < InputSize; i++)
             {
-                // Загружаем веса
-                Weights = new float[Size];
-                for (int i = 0; i < Weights.Length; i++)
+                for (int j = 0; j < Size; j++)
                 {
-                    Weights[i] = reader.ReadSingle();
-                }
-
-                // Загружаем смещения
-                Biases = new float[Size];
-                for (int i = 0; i < Biases.Length; i++)
-                {
-                    Biases[i] = reader.ReadSingle();
+                    Weights[i, j] = reader.ReadSingle();
                 }
             }
+
+            Biases = Enumerable.Range(0, Size)
+                               .Select(_ => reader.ReadSingle())
+                               .ToArray();
+        }
+
+        // Нормализация функции
+        protected float[] Normalize(float[] input)
+        {
+            float mean = input.Average();
+            float variance = input.Select(val => (val - mean) * (val - mean)).Average();
+            float stddev = MathF.Sqrt(variance);
+
+            float[] normalized = input.Select(x => (x - mean) / (stddev + 1e-8f)).ToArray();
+            return normalized;
         }
     }
 }

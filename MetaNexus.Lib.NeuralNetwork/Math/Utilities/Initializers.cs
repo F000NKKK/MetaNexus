@@ -5,7 +5,7 @@
     /// </summary>
     public static class Initializers
     {
-        private static readonly Random Random = new Random();
+        private static readonly Random Random = new Random(DateTime.Now.Millisecond);
 
         /// <summary>
         /// Инициализация весов методом Ксавье.

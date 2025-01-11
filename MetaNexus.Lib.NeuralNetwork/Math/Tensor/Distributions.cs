@@ -5,7 +5,7 @@
     /// </summary>
     public static class Distributions
     {
-        private static readonly Random Random = new Random();
+        private static readonly Random Random = new Random(DateTime.Now.Millisecond);
 
         /// <summary>
         /// Генерирует значения из равномерного распределения.

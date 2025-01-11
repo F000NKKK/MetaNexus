@@ -5,6 +5,7 @@
     /// </summary>
     public class NetworkConfig
     {
+        public int InputSize { get; set; }  // Размер входных данных
         public List<LayerConfig> Layers { get; set; }
     }
 }
