@@ -5,6 +5,8 @@ VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaNexus.Lib.NeuralNetwork", "MetaNexus.Lib.NeuralNetwork\MetaNexus.Lib.NeuralNetwork.csproj", "{CCFCAE94-686A-4A08-8A99-D5DD77C37D2A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaNexus.App.DemoApp", "MetaNexus.App.DemoApp\MetaNexus.App.DemoApp.csproj", "{F4EF0979-2D78-40F7-B3BF-AA149F96B449}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{CCFCAE94-686A-4A08-8A99-D5DD77C37D2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCFCAE94-686A-4A08-8A99-D5DD77C37D2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCFCAE94-686A-4A08-8A99-D5DD77C37D2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4EF0979-2D78-40F7-B3BF-AA149F96B449}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4EF0979-2D78-40F7-B3BF-AA149F96B449}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4EF0979-2D78-40F7-B3BF-AA149F96B449}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4EF0979-2D78-40F7-B3BF-AA149F96B449}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
