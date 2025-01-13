@@ -2,35 +2,27 @@
 {
     /// <summary>
     /// Интерфейс для выполнения поэлементных операций с тензорами.
+    /// Позволяет реализовать операции, такие как сложение, вычитание, умножение и деление,
+    /// между тензорами или между тензором и скаляром.
     /// </summary>
     internal interface ITensorElementWiseOperations
     {
         /// <summary>
-        /// Поэлементное сложение двух тензоров.
+        /// Выполняет поэлементную операцию между текущим тензором и другим тензором.
+        /// Ожидается, что формы (размерности) обоих тензоров совпадают.
         /// </summary>
-        /// <param name="other">Другой тензор для поэлементного сложения.</param>
-        /// <returns>Результат поэлементного сложения.</returns>
-        Tensor ElementWiseAdd(Tensor other);
+        /// <param name="other">Другой тензор, с которым будет выполнена операция.</param>
+        /// <param name="operation">Функция, описывающая операцию, которая будет применена к каждому элементу.</param>
+        /// <returns>Новый тензор, результат выполнения операции.</returns>
+        Tensor ElementWiseOperation(Tensor other, Func<float, float, float> operation);
 
         /// <summary>
-        /// Поэлементное вычитание двух тензоров.
+        /// Выполняет поэлементную операцию между текущим тензором и скаляром.
+        /// Скаляры могут быть использованы для масштабирования или смещения значений в тензоре.
         /// </summary>
-        /// <param name="other">Тензор для поэлементного вычитания.</param>
-        /// <returns>Результат поэлементного вычитания.</returns>
-        Tensor ElementWiseSubtract(Tensor other);
-
-        /// <summary>
-        /// Поэлементное умножение двух тензоров.
-        /// </summary>
-        /// <param name="other">Тензор для поэлементного умножения.</param>
-        /// <returns>Результат поэлементного умножения.</returns>
-        Tensor ElementWiseMultiply(Tensor other);
-
-        /// <summary>
-        /// Поэлементное деление двух тензоров.
-        /// </summary>
-        /// <param name="other">Тензор для поэлементного деления.</param>
-        /// <returns>Результат поэлементного деления.</returns>
-        Tensor ElementWiseDivide(Tensor other);
+        /// <param name="scalar">Скаляр, с которым будет выполнена операция.</param>
+        /// <param name="operation">Функция, описывающая операцию, которая будет применена к каждому элементу.</param>
+        /// <returns>Новый тензор, результат выполнения операции.</returns>
+        Tensor ElementWiseOperation(float scalar, Func<float, float, float> operation);
     }
 }

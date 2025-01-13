@@ -4,24 +4,27 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
     public partial struct Tensor : ITensorElementWiseOperations
     {
-        public Tensor ElementWiseAdd(Tensor other)
+        Tensor ITensorElementWiseOperations.ElementWiseOperation(Tensor other, Func<float, float, float> operation)
         {
-            throw new NotImplementedException();
+            if (!Shape.SequenceEqual(other.Shape))
+                throw new InvalidOperationException("Tensors must have the same shape for element-wise operation.");
+
+            Tensor result = new Tensor(Shape);
+            for (int i = 0; i < Size; i++)
+            {
+                result._data[i] = operation(_data[i], other._data[i]);
+            }
+            return result;
         }
 
-        public Tensor ElementWiseDivide(Tensor other)
+        Tensor ITensorElementWiseOperations.ElementWiseOperation(float scalar, Func<float, float, float> operation)
         {
-            throw new NotImplementedException();
-        }
-
-        public Tensor ElementWiseMultiply(Tensor other)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Tensor ElementWiseSubtract(Tensor other)
-        {
-            throw new NotImplementedException();
+            Tensor result = new Tensor(Shape);
+            for (int i = 0; i < Size; i++)
+            {
+                result._data[i] = operation(_data[i], scalar);
+            }
+            return result;
         }
     }
 }

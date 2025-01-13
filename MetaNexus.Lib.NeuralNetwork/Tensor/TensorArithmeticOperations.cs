@@ -4,99 +4,47 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
     public partial struct Tensor : ITensorArithmeticOperations
     {
-        private void CheckDimensions(Tensor other)
+        public Tensor Add(Tensor other)
         {
-            if (_data.Length != other._data.Length)
-                throw new InvalidOperationException("Размерности тензоров не совпадают.");
+            return ((ITensorElementWiseOperations)this).ElementWiseOperation(other, (a, b) => a + b);
         }
 
-        Tensor ITensorArithmeticOperations.Add(Tensor other)
+        public Tensor Add(float scalar)
         {
-            CheckDimensions(other);
-            var resultData = new float[_data.Length];
-            for (int i = 0; i < _data.Length; i++)
-            {
-                resultData[i] = _data[i] + other._data[i];
-            }
-            return new Tensor(_shape, resultData);
+            return ((ITensorElementWiseOperations)this).ElementWiseOperation(scalar, (a, b) => a + b);
         }
 
-        Tensor ITensorArithmeticOperations.Add(float scalar)
+        public Tensor Divide(Tensor other)
         {
-            var resultData = new float[_data.Length];
-            for (int i = 0; i < _data.Length; i++)
-            {
-                resultData[i] = _data[i] + scalar;
-            }
-            return new Tensor(_shape, resultData);
+            return ((ITensorElementWiseOperations)this).ElementWiseOperation(other, (a, b) => a / b);
         }
 
-        Tensor ITensorArithmeticOperations.Divide(Tensor other)
+        public Tensor Divide(float scalar)
         {
-            CheckDimensions(other);
-            var resultData = new float[_data.Length];
-            for (int i = 0; i < _data.Length; i++)
-            {
-                resultData[i] = _data[i] / other._data[i];
-            }
-            return new Tensor(_shape, resultData);
+            return ((ITensorElementWiseOperations)this).ElementWiseOperation(scalar, (a, b) => a / b);
         }
 
-        Tensor ITensorArithmeticOperations.Divide(float scalar)
+        public Tensor Multiply(Tensor other)
         {
-            if (scalar == 0)
-                throw new DivideByZeroException("Деление на ноль недопустимо.");
-
-            var resultData = new float[_data.Length];
-            for (int i = 0; i < _data.Length; i++)
-            {
-                resultData[i] = _data[i] / scalar;
-            }
-            return new Tensor(_shape, resultData);
+            return ((ITensorElementWiseOperations)this).ElementWiseOperation(other, (a, b) => a * b);
         }
 
-        Tensor ITensorArithmeticOperations.Multiply(Tensor other)
+        public Tensor Multiply(float scalar)
         {
-            CheckDimensions(other);
-            var resultData = new float[_data.Length];
-            for (int i = 0; i < _data.Length; i++)
-            {
-                resultData[i] = _data[i] * other._data[i];
-            }
-            return new Tensor(_shape, resultData);
+            return ((ITensorElementWiseOperations)this).ElementWiseOperation(scalar, (a, b) => a * b);
         }
 
-        Tensor ITensorArithmeticOperations.Multiply(float scalar)
+        public Tensor Subtract(Tensor other)
         {
-            var resultData = new float[_data.Length];
-            for (int i = 0; i < _data.Length; i++)
-            {
-                resultData[i] = _data[i] * scalar;
-            }
-            return new Tensor(_shape, resultData);
+            return ((ITensorElementWiseOperations)this).ElementWiseOperation(other, (a, b) => a - b);
         }
 
-        Tensor ITensorArithmeticOperations.Subtract(Tensor other)
+        public Tensor Subtract(float scalar)
         {
-            CheckDimensions(other);
-            var resultData = new float[_data.Length];
-            for (int i = 0; i < _data.Length; i++)
-            {
-                resultData[i] = _data[i] - other._data[i];
-            }
-            return new Tensor(_shape, resultData);
+            return ((ITensorElementWiseOperations)this).ElementWiseOperation(scalar, (a, b) => a - b);
         }
 
-        Tensor ITensorArithmeticOperations.Subtract(float scalar)
-        {
-            var resultData = new float[_data.Length];
-            for (int i = 0; i < _data.Length; i++)
-            {
-                resultData[i] = _data[i] - scalar;
-            }
-            return new Tensor(_shape, resultData);
-        }
-
+        // Перегрузки операторов
         public static Tensor operator +(Tensor tensor1, Tensor tensor2)
         {
             return ((ITensorArithmeticOperations)tensor1).Add(tensor2);
