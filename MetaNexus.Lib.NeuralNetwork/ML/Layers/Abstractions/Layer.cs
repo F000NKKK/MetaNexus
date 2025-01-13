@@ -1,16 +1,19 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensors;
+using System;
 
 namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
 {
     public abstract class Layer
     {
-        public Tensor Biases { get; private set; }
-        public Tensor Weights { get; private set; }
-        public int Size { get; protected set; }
-        public int InputSize { get; protected set; }
+        private Tensor biases;
+        private Tensor weights;
+
+        public int Size { get; set; }
+        public int InputSize { get; set; }
 
         private static Random random = new Random(DateTime.Now.Millisecond);
 
+        // Конструктор с размером входа и размером слоя
         public Layer(int inputSize, int size)
         {
             if (size <= 0)
@@ -22,6 +25,7 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
             InitializeWeightsAndBiases();
         }
 
+        // Конструктор с размером слоя (если входной размер равен размеру слоя)
         public Layer(int inputSize)
         {
             if (inputSize <= 0)
@@ -33,66 +37,64 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
             InitializeWeightsAndBiases();
         }
 
+        // Конструктор для инициализации с существующими весами и смещениями
+        public Layer(int inputSize, int size, Tensor weights, Tensor biases)
+        {
+            if (weights.Shape[0] != inputSize || weights.Shape[1] != size)
+                throw new ArgumentException("Размеры тензоров весов не совпадают с размером слоя.");
+
+            if (biases.Shape[0] != size)
+                throw new ArgumentException("Размер тензора смещений не совпадает с размером слоя.");
+
+            Size = size;
+            InputSize = inputSize;
+            this.weights = weights;
+            this.biases = biases;
+        }
+
+        // Абстрактный метод для выполнения прямого прохода
         public abstract Tensor Forward(Tensor input);
 
+        // Функции для получения и установки значений весов и смещений
+        public Tensor GetWeights() => weights;
+
+        public void SetWeights(Tensor newWeights)
+        {
+            if (newWeights.Shape[0] != InputSize || newWeights.Shape[1] != Size)
+                throw new ArgumentException("Размеры нового тензора весов не совпадают с размерами слоя.");
+
+            weights = newWeights;
+        }
+
+        public Tensor GetBiases() => biases;
+
+        public void SetBiases(Tensor newBiases)
+        {
+            if (newBiases.Shape[0] != Size)
+                throw new ArgumentException("Размеры нового тензора смещений не совпадают с размерами слоя.");
+
+            biases = newBiases;
+        }
+
+        // Инициализация весов и смещений случайными значениями
         private void InitializeWeightsAndBiases()
         {
-            Weights = new Tensor(new int[] { InputSize, Size });
-            Biases = new Tensor(new int[] { Size });
+            weights = new Tensor(new int[] { InputSize, Size });
+            biases = new Tensor(new int[] { Size });
 
-            // Инициализация весов и смещений случайными значениями
-            Console.WriteLine("Инициализация весов и смещений:");
-
-            // Инициализация весов
+            // Инициализация весов случайными значениями
             for (int i = 0; i < InputSize; i++)
             {
                 for (int j = 0; j < Size; j++)
                 {
-                    Weights[i, j] = (float)(random.NextDouble() * 2.0 - 1.0);
-                    Console.WriteLine($"Вес для (нейрон {i}, {j}): {Weights[i, j]}");
+                    weights[i, j] = (float)(random.NextDouble() * 2.0 - 1.0);
                 }
             }
 
-            // Инициализация смещений
+            // Инициализация смещений случайными значениями
             for (int i = 0; i < Size; i++)
             {
-                Biases[i] = (float)(random.NextDouble() * 2.0 - 1.0);
-                Console.WriteLine($"Смещение для нейрона {i}: {Biases[i]}");
-            }
-        }
-
-        public void SaveWeights(BinaryWriter writer)
-        {
-            // Сохранение весов и смещений в бинарный файл
-            for (int i = 0; i < Weights.Shape[0]; i++)
-            {
-                for (int j = 0; j < Weights.Shape[1]; j++)
-                {
-                    writer.Write(Weights[i, j]);
-                }
-            }
-
-            for (int i = 0; i < Biases.Shape[0]; i++)
-            {
-                writer.Write(Biases[i]);
-            }
-        }
-
-        public void LoadWeights(BinaryReader reader)
-        {
-            // Загрузка весов
-            for (int i = 0; i < Weights.Shape[0]; i++)
-            {
-                for (int j = 0; j < Weights.Shape[1]; j++)
-                {
-                    Weights[i, j] = reader.ReadSingle();
-                }
-            }
-
-            // Загрузка смещений
-            for (int i = 0; i < Biases.Shape[0]; i++)
-            {
-                Biases[i] = reader.ReadSingle();
+                biases[i] = (float)(random.NextDouble() * 2.0 - 1.0);
             }
         }
     }
