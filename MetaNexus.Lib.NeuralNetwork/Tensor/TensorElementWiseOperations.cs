@@ -1,7 +1,7 @@
-﻿using MetaNexus.Lib.NeuralNetwork.Tensor.Math.Abstractions;
+﻿using MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions;
 using System.Numerics;
 
-namespace MetaNexus.Lib.NeuralNetwork.Math.Tensor
+namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
     public partial struct Tensor<T> : ITensorElementWiseOperations<T> where T : INumber<T>
     {

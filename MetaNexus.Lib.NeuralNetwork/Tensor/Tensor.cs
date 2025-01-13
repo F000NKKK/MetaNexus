@@ -1,47 +1,101 @@
-﻿using MetaNexus.Lib.NeuralNetwork.Tensor;
-using MetaNexus.Lib.NeuralNetwork.Tensor.Math.Abstractions;
-using Newtonsoft.Json;
-using System;
+﻿using MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions;
 using System.Numerics;
 
-namespace MetaNexus.Lib.NeuralNetwork.Math.Tensor
+namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
     /// <summary>
     /// Структура Tensor представляет многомерный массив числовых данных с поддержкой операций над тензорами.
     /// </summary>
     public partial struct Tensor<T> : ITensor<T> where T : INumber<T>
     {
-        public T this[params int[] indices] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        private T[] _data;
+        private int[] _shape;
 
-        public int[] Shape => throw new NotImplementedException();
+        // Конструктор для создания тензора из данных и формы
+        public Tensor(int[] shape)
+        {
+            _shape = shape ?? throw new ArgumentNullException(nameof(shape));
+            Size = 1;
+            foreach (var dim in shape)
+            {
+                Size *= dim;
+            }
+            _data = new T[Size];
+        }
 
-        public int Rank => throw new NotImplementedException();
+        public T this[params int[] indices]
+        {
+            get
+            {
+                if (indices.Length != _shape.Length)
+                    throw new ArgumentException("Количество индексов не соответствует рангу тензора.");
 
-        public int Size => throw new NotImplementedException();
+                int flatIndex = GetFlatIndex(indices);
+                return _data[flatIndex];
+            }
+            set
+            {
+                if (indices.Length != _shape.Length)
+                    throw new ArgumentException("Количество индексов не соответствует рангу тензора.");
+
+                int flatIndex = GetFlatIndex(indices);
+                _data[flatIndex] = value;
+            }
+        }
+
+        public int[] Shape => _shape;
+
+        public int Rank => _shape.Length;
+
+        public int Size { get; private set; }
 
         public Tensor<T> Apply(Func<T, T> func)
         {
-            throw new NotImplementedException();
+            var result = new Tensor<T>(_shape);
+            for (int i = 0; i < Size; i++)
+            {
+                result._data[i] = func(_data[i]);
+            }
+            return result;
         }
 
         public Tensor<T> Clone()
         {
-            throw new NotImplementedException();
+            var clone = new Tensor<T>(_shape);
+            Array.Copy(_data, clone._data, Size);
+            return clone;
         }
 
         public Tensor<TTarget> ConvertTo<TTarget>() where TTarget : INumber<TTarget>
         {
-            throw new NotImplementedException();
+            var targetTensor = new Tensor<TTarget>(_shape);
+            for (int i = 0; i < Size; i++)
+            {
+                targetTensor._data[i] = (TTarget)Convert.ChangeType(_data[i], typeof(TTarget));
+            }
+            return targetTensor;
         }
 
         public T[] Flatten()
         {
-            throw new NotImplementedException();
+            return (T[])_data.Clone();
         }
 
         public bool IsEmpty()
         {
-            throw new NotImplementedException();
+            return Size == 0;
+        }
+
+        private int GetFlatIndex(int[] indices)
+        {
+            int index = 0;
+            int multiplier = 1;
+            for (int i = _shape.Length - 1; i >= 0; i--)
+            {
+                index += indices[i] * multiplier;
+                multiplier *= _shape[i];
+            }
+            return index;
         }
     }
 }

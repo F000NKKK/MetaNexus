@@ -1,8 +1,7 @@
-﻿using MetaNexus.Lib.NeuralNetwork.Math.Tensor;
-using MetaNexus.Lib.NeuralNetwork.Tensor.Math.Abstractions;
+﻿using MetaNexus.Lib.NeuralNetwork.Tensor;
 using System.Numerics;
 
-namespace MetaNexus.Lib.NeuralNetwork.Tensor
+namespace MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions
 {
     /// <summary>
     /// Интерфейс для работы с тензорами, поддерживающий доступ к данным,
