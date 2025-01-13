@@ -5,13 +5,11 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
     public partial struct Tensor : ITensorShapeOperations
     {
-        // Транспонирование тензора (для матриц)
         public Tensor Transpose()
         {
             if (_shape.Length != 2)
                 throw new InvalidOperationException("Транспонирование поддерживается только для двумерных тензоров.");
 
-            // Меняем местами оси 0 и 1 для матрицы
             var newShape = new int[] { _shape[1], _shape[0] };
             var result = new Tensor(newShape);
 
@@ -26,7 +24,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             return result;
         }
 
-        // Изменение формы тензора
         public Tensor Reshape(int[] newShape)
         {
             int newSize = 1;
@@ -43,7 +40,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             return result;
         }
 
-        // Разбиение тензора на несколько частей вдоль указанной оси
         public Tensor[] Split(int axis, int parts)
         {
             if (axis < 0 || axis >= _shape.Length)
@@ -74,13 +70,11 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             return result;
         }
 
-        // Изменение порядка осей тензора
         public Tensor TransposeAxes(int[] newOrder)
         {
             if (newOrder.Length != _shape.Length)
                 throw new InvalidOperationException("Новый порядок осей должен быть той же длины, что и текущий.");
 
-            // Проверяем, что новый порядок является перестановкой
             bool[] visited = new bool[_shape.Length];
             foreach (var index in newOrder)
             {
@@ -90,7 +84,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
                 visited[index] = true;
             }
 
-            // Генерация нового тензора с изменённым порядком осей
             var resultShape = new int[_shape.Length];
             for (int i = 0; i < _shape.Length; i++)
             {
@@ -101,7 +94,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             int[] indices = new int[_shape.Length];
             int flatIndex;
 
-            // Создаем копию тензора, чтобы избежать ошибки доступа к 'this' внутри лямбда-выражений
             Tensor tensor = this;
 
             for (int i = 0; i < Size; i++)
@@ -114,7 +106,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             return result;
         }
 
-        // Получение индексов для плоского массива
         private void GetIndicesFromFlatIndex(int flatIndex, int[] indices)
         {
             int remainingIndex = flatIndex;
@@ -125,7 +116,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             }
         }
 
-        // Получение нового плоского индекса с учётом нового порядка осей
         private int GetFlatIndexFromNewOrder(int[] indices, int[] newOrder)
         {
             int flatIndex = 0;

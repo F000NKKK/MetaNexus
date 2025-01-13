@@ -4,7 +4,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
     public partial struct Tensor : ITensorMatrixOperations
     {
-        // Матричное умножение двух тензоров
         public Tensor MatrixMultiply(Tensor other)
         {
             if (_shape.Length != 2 || other._shape.Length != 2)
@@ -35,10 +34,8 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             return result;
         }
 
-        // Матричное деление (аналогично умножению на обратную матрицу)
         public Tensor MatrixDivide(Tensor other)
         {
-            // Для деления матриц необходимо, чтобы другая матрица была квадратной и обратимой
             if (other._shape[0] != other._shape[1])
                 throw new InvalidOperationException("Для матричного деления вторая матрица должна быть квадратной.");
 
@@ -46,7 +43,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             return this.MatrixMultiply(inverseOther);
         }
 
-        // Вычисление детерминанта матрицы (для квадратной матрицы)
         public float Determinant()
         {
             if (_shape[0] != _shape[1])
@@ -55,7 +51,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             return CalculateDeterminant(_data, _shape[0]);
         }
 
-        // Обратная матрица (для квадратных матриц)
         public Tensor Inverse()
         {
             if (_shape[0] != _shape[1])
@@ -64,22 +59,19 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             return CalculateInverse(_data, _shape[0]);
         }
 
-        // Вспомогательный метод для вычисления детерминанта (через LU-разложение для квадратных матриц)
         private float CalculateDeterminant(float[] matrixData, int n)
         {
-            // Используем LU-разложение для более эффективного вычисления детерминанта
             var (L, U) = LUDecompose(matrixData, n);
 
             float det = 1;
             for (int i = 0; i < n; i++)
             {
-                det *= U[i * n + i]; // Детерминант = произведение диагональных элементов матрицы U
+                det *= U[i * n + i];
             }
 
             return det;
         }
 
-        // Вспомогательный метод для LU-разложения матрицы
         private (float[] L, float[] U) LUDecompose(float[] matrixData, int n)
         {
             float[] L = new float[n * n];
@@ -88,7 +80,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
 
             for (int i = 0; i < n; i++)
             {
-                L[i * n + i] = 1; // Единичная матрица для L на диагонали
+                L[i * n + i] = 1;
             }
 
             for (int i = 0; i < n; i++)
@@ -107,7 +99,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             return (L, U);
         }
 
-        // Вспомогательный метод для вычисления скалярного произведения L и U для LU-разложения
         private float DotProduct(float[] L, float[] U, int row, int col, int n)
         {
             float result = 0;
@@ -118,7 +109,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             return result;
         }
 
-        // Вспомогательный метод для вычисления обратной матрицы через метод Гаусса с меньшими накладными расходами
         private Tensor CalculateInverse(float[] matrixData, int n)
         {
             var matrix = (float[])matrixData.Clone();
