@@ -1,19 +1,17 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensors;
-using System;
 
 namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
 {
-    public abstract class Layer
+    /// <summary>
+    /// Абстрактный класс для слоя нейронной сети.
+    /// </summary>
+    public abstract class Layer : ILayer
     {
-        private Tensor biases;
-        private Tensor weights;
-
-        public int Size { get; set; }
-        public int InputSize { get; set; }
-
-        private static Random random = new Random(DateTime.Now.Millisecond);
-
-        // Конструктор с размером входа и размером слоя
+        /// <summary>
+        /// Конструктор для создания слоя с заданными размерами.
+        /// </summary>
+        /// <param name="inputSize">Размер входа.</param>
+        /// <param name="size">Размер слоя (количество нейронов).</param>
         public Layer(int inputSize, int size)
         {
             if (size <= 0)
@@ -22,10 +20,13 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
             Size = size;
             InputSize = inputSize;
 
-            InitializeWeightsAndBiases();
+            ((ILayer)this).InitializeWeightsAndBiases();
         }
 
-        // Конструктор с размером слоя (если входной размер равен размеру слоя)
+        /// <summary>
+        /// Конструктор для создания слоя с размером входа равным размеру слоя.
+        /// </summary>
+        /// <param name="inputSize">Размер входа.</param>
         public Layer(int inputSize)
         {
             if (inputSize <= 0)
@@ -34,68 +35,94 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
             Size = inputSize;
             InputSize = inputSize;
 
-            InitializeWeightsAndBiases();
+            ((ILayer)this).InitializeWeightsAndBiases();
         }
 
-        // Конструктор для инициализации с существующими весами и смещениями
+        /// <summary>
+        /// Конструктор для создания слоя с заданными весами и смещениями.
+        /// </summary>
+        /// <param name="inputSize">Размер входа.</param>
+        /// <param name="size">Размер слоя (количество нейронов).</param>
+        /// <param name="weights">Тензор весов для слоя.</param>
+        /// <param name="biases">Тензор смещений для слоя.</param>
         public Layer(int inputSize, int size, Tensor weights, Tensor biases)
         {
             if (weights.Shape[0] != inputSize || weights.Shape[1] != size)
                 throw new ArgumentException("Размеры тензоров весов не совпадают с размером слоя.");
 
             if (biases.Shape[0] != size)
-                throw new ArgumentException("Размер тензора смещений не совпадает с размером слоя.");
+                throw new ArgumentException("Размеры тензора смещений не совпадают с размером слоя.");
 
             Size = size;
             InputSize = inputSize;
-            this.weights = weights;
-            this.biases = biases;
+            this._weights = weights;
+            this._biases = biases;
         }
 
-        // Абстрактный метод для выполнения прямого прохода
-        public abstract Tensor Forward(Tensor input);
+        void ILayer.InitializeWeightsAndBiases()
+        {
+            _weights = new Tensor(new int[] { InputSize, Size });
+            _biases = new Tensor(new int[] { Size });
 
-        // Функции для получения и установки значений весов и смещений
-        public Tensor GetWeights() => weights;
+            for (int i = 0; i < InputSize; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    _weights[i, j] = (float)(random.NextDouble() * 2.0 - 1.0);
+                }
+            }
+
+            for (int i = 0; i < Size; i++)
+            {
+                _biases[i] = (float)(random.NextDouble() * 2.0 - 1.0);
+            }
+        }
+
+        public Tensor GetWeights() => _weights;
 
         public void SetWeights(Tensor newWeights)
         {
             if (newWeights.Shape[0] != InputSize || newWeights.Shape[1] != Size)
                 throw new ArgumentException("Размеры нового тензора весов не совпадают с размерами слоя.");
 
-            weights = newWeights;
+            _weights = newWeights;
         }
 
-        public Tensor GetBiases() => biases;
+        public Tensor GetBiases() => _biases;
 
         public void SetBiases(Tensor newBiases)
         {
             if (newBiases.Shape[0] != Size)
                 throw new ArgumentException("Размеры нового тензора смещений не совпадают с размерами слоя.");
 
-            biases = newBiases;
+            _biases = newBiases;
         }
 
-        // Инициализация весов и смещений случайными значениями
-        private void InitializeWeightsAndBiases()
-        {
-            weights = new Tensor(new int[] { InputSize, Size });
-            biases = new Tensor(new int[] { Size });
+        public abstract Tensor Forward(Tensor input);
 
-            // Инициализация весов случайными значениями
-            for (int i = 0; i < InputSize; i++)
-            {
-                for (int j = 0; j < Size; j++)
-                {
-                    weights[i, j] = (float)(random.NextDouble() * 2.0 - 1.0);
-                }
-            }
+        /// <summary>
+        /// Тензор смещений для слоя.
+        /// </summary>
+        private Tensor _biases;
 
-            // Инициализация смещений случайными значениями
-            for (int i = 0; i < Size; i++)
-            {
-                biases[i] = (float)(random.NextDouble() * 2.0 - 1.0);
-            }
-        }
+        /// <summary>
+        /// Тензор весов для слоя.
+        /// </summary>
+        private Tensor _weights;
+
+        /// <summary>
+        /// Размер слоя (количество нейронов в слое).
+        /// </summary>
+        public int Size { get; set; }
+
+        /// <summary>
+        /// Размер входа (количество нейронов или признаков на входе).
+        /// </summary>
+        public int InputSize { get; set; }
+
+        /// <summary>
+        /// Случайный генератор для инициализации весов и смещений.
+        /// </summary>
+        private static Random random = new Random(DateTime.Now.Millisecond);
     }
 }
