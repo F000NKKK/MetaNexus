@@ -1,4 +1,4 @@
-﻿using MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions;
+﻿using MetaNexus.Lib.NeuralNetwork.Tensor;
 using MetaNexus.Lib.NeuralNetwork.Tensor.Math.Abstractions;
 using Newtonsoft.Json;
 using System;
