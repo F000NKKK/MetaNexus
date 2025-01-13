@@ -27,6 +27,11 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             _data = new T[Size];
         }
 
+        /// <summary>
+        /// Конструктор для создания многомерного тензора с заданной формой и исходными данными.
+        /// </summary>
+        /// <param name="shape">Массив, представляющий форму тензора (размерности для каждого измерения).</param>
+        /// <param name="data">Массив данных, заполняющий тензор.</param>
         public Tensor(int[] shape, T[] data)
         {
             _shape = shape ?? throw new ArgumentNullException(nameof(shape));
@@ -35,7 +40,23 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             {
                 Size *= dim;
             }
-            _data = data;
+            _data = data ?? throw new ArgumentNullException(nameof(data));
+            if (data.Length != Size)
+            {
+                throw new ArgumentException("Размер массива данных не соответствует размеру тензора.");
+            }
+        }
+
+        /// <summary>
+        /// Конструктор для создания нового тензора на основе существующего тензора (глубокое копирование).
+        /// </summary>
+        /// <param name="existingTensor">Существующий тензор, данные которого будут скопированы в новый.</param>
+        public Tensor(Tensor<T> existingTensor)
+        {
+            _shape = existingTensor._shape;
+            Size = existingTensor.Size;
+            _data = new T[Size];
+            Array.Copy(existingTensor._data, _data, Size);
         }
 
         public T this[params int[] indices]
