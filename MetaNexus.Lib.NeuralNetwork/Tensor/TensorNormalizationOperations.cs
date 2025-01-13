@@ -1,16 +1,15 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions;
-using System.Numerics;
 
 namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
-    public partial struct Tensor<T> : ITensorNormalizationOperations<T> where T : INumber<T>
+    public partial struct Tensor : ITensorNormalizationOperations
     {
-        public Tensor<T> BatchNormalize(Tensor<T> mean, Tensor<T> variance)
+        public Tensor BatchNormalize(Tensor mean, Tensor variance)
         {
             throw new NotImplementedException();
         }
 
-        public Tensor<T> Normalize()
+        public Tensor Normalize()
         {
             throw new NotImplementedException();
         }

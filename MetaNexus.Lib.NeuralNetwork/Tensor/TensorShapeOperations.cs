@@ -1,16 +1,15 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions;
-using System.Numerics;
 
 namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
-    public partial struct Tensor<T> : ITensorShapeOperations<T> where T : INumber<T>
+    public partial struct Tensor : ITensorShapeOperations
     {
-        public Tensor<T> Reshape(int[] newShape)
+        public Tensor Reshape(int[] newShape)
         {
             throw new NotImplementedException();
         }
 
-        public Tensor<T> Transpose()
+        public Tensor Transpose()
         {
             throw new NotImplementedException();
         }

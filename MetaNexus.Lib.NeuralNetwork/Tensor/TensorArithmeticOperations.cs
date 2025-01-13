@@ -1,46 +1,45 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions;
-using System.Numerics;
 
 namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
-    public partial struct Tensor<T> : ITensorArithmeticOperations<T> where T : INumber<T>
+    public partial struct Tensor : ITensorArithmeticOperations
     {
-        public Tensor<T> Add(Tensor<T> other)
+        public Tensor Add(Tensor other)
         {
             throw new NotImplementedException();
         }
 
-        public Tensor<T> Add(T scalar)
+        public Tensor Add(float scalar)
         {
             throw new NotImplementedException();
         }
 
-        public Tensor<T> Divide(Tensor<T> other)
+        public Tensor Divide(Tensor other)
         {
             throw new NotImplementedException();
         }
 
-        public Tensor<T> Divide(T scalar)
+        public Tensor Divide(float scalar)
         {
             throw new NotImplementedException();
         }
 
-        public Tensor<T> Multiply(Tensor<T> other)
+        public Tensor Multiply(Tensor other)
         {
             throw new NotImplementedException();
         }
 
-        public Tensor<T> Multiply(T scalar)
+        public Tensor Multiply(float scalar)
         {
             throw new NotImplementedException();
         }
 
-        public Tensor<T> Subtract(Tensor<T> other)
+        public Tensor Subtract(Tensor other)
         {
             throw new NotImplementedException();
         }
 
-        public Tensor<T> Subtract(T scalar)
+        public Tensor Subtract(float scalar)
         {
             throw new NotImplementedException();
         }

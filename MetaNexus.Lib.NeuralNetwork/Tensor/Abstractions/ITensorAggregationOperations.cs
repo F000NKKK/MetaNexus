@@ -1,34 +1,32 @@
-﻿using System.Numerics;
-
-namespace MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions
+﻿namespace MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions
 {
     /// <summary>
     /// Интерфейс для выполнения агрегационных операций с тензорами.
     /// </summary>
-    internal interface ITensorAggregationOperations<T> where T : INumber<T>
+    internal interface ITensorAggregationOperations
     {
         /// <summary>
         /// Вычисление суммы всех элементов тензора.
         /// </summary>
         /// <returns>Сумма элементов тензора.</returns>
-        T Sum();
+        float Sum();
 
         /// <summary>
         /// Нахождение минимального элемента в тензоре.
         /// </summary>
         /// <returns>Минимальное значение в тензоре.</returns>
-        T Min();
+        float Min();
 
         /// <summary>
         /// Нахождение максимального элемента в тензоре.
         /// </summary>
         /// <returns>Максимальное значение в тензоре.</returns>
-        T Max();
+        float Max();
 
         /// <summary>
         /// Вычисление среднего значения всех элементов тензора.
         /// </summary>
         /// <returns>Среднее значение элементов тензора.</returns>
-        T Mean();
+        float Mean();
     }
 }

@@ -1,11 +1,10 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions;
-using System.Numerics;
 
 namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
-    public partial struct Tensor<T> : ITensorMatrixOperations<T> where T : INumber<T>
+    public partial struct Tensor : ITensorMatrixOperations
     {
-        public Tensor<T> MatrixMultiply(Tensor<T> other)
+        public Tensor MatrixMultiply(Tensor other)
         {
             throw new NotImplementedException();
         }

@@ -1,26 +1,25 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions;
-using System.Numerics;
 
 namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
-    public partial struct Tensor<T> : ITensorElementWiseOperations<T> where T : INumber<T>
+    public partial struct Tensor : ITensorElementWiseOperations
     {
-        public Tensor<T> ElementWiseAdd(Tensor<T> other)
+        public Tensor ElementWiseAdd(Tensor other)
         {
             throw new NotImplementedException();
         }
 
-        public Tensor<T> ElementWiseDivide(Tensor<T> other)
+        public Tensor ElementWiseDivide(Tensor other)
         {
             throw new NotImplementedException();
         }
 
-        public Tensor<T> ElementWiseMultiply(Tensor<T> other)
+        public Tensor ElementWiseMultiply(Tensor other)
         {
             throw new NotImplementedException();
         }
 
-        public Tensor<T> ElementWiseSubtract(Tensor<T> other)
+        public Tensor ElementWiseSubtract(Tensor other)
         {
             throw new NotImplementedException();
         }

@@ -1,23 +1,21 @@
-﻿using System.Numerics;
-
-namespace MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions
+﻿namespace MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions
 {
     /// <summary>
     /// Интерфейс для изменения формы и трансформации тензоров.
     /// </summary>
-    internal interface ITensorShapeOperations<T> where T : INumber<T>
+    internal interface ITensorShapeOperations
     {
         /// <summary>
         /// Транспонирование тензора (для матриц).
         /// </summary>
         /// <returns>Тензор, полученный в результате транспонирования.</returns>
-        Tensor<T> Transpose();
+        Tensor Transpose();
 
         /// <summary>
         /// Изменение формы тензора.
         /// </summary>
         /// <param name="newShape">Новая форма тензора.</param>
         /// <returns>Тензор с новой формой.</returns>
-        Tensor<T> Reshape(int[] newShape);
+        Tensor Reshape(int[] newShape);
     }
 }

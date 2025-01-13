@@ -1,14 +1,13 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions;
-using System.Numerics;
 
 namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
     /// <summary>
     /// Структура Tensor представляет многомерный массив числовых данных с поддержкой операций над тензорами.
     /// </summary>
-    public partial struct Tensor<T> : ITensor<T> where T : INumber<T>
+    public partial struct Tensor : ITensor
     {
-        private T[] _data;
+        private float[] _data;
         private int[] _shape;
 
         /// <summary>
@@ -24,7 +23,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             {
                 Size *= dim;
             }
-            _data = new T[Size];
+            _data = new float[Size];
         }
 
         /// <summary>
@@ -32,7 +31,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
         /// </summary>
         /// <param name="shape">Массив, представляющий форму тензора (размерности для каждого измерения).</param>
         /// <param name="data">Массив данных, заполняющий тензор.</param>
-        public Tensor(int[] shape, T[] data)
+        public Tensor(int[] shape, float[] data)
         {
             _shape = shape ?? throw new ArgumentNullException(nameof(shape));
             Size = 1;
@@ -51,15 +50,15 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
         /// Конструктор для создания нового тензора на основе существующего тензора (глубокое копирование).
         /// </summary>
         /// <param name="existingTensor">Существующий тензор, данные которого будут скопированы в новый.</param>
-        public Tensor(Tensor<T> existingTensor)
+        public Tensor(Tensor existingTensor)
         {
             _shape = existingTensor._shape;
             Size = existingTensor.Size;
-            _data = new T[Size];
+            _data = new float[Size];
             Array.Copy(existingTensor._data, _data, Size);
         }
 
-        public T this[params int[] indices]
+        public float this[params int[] indices]
         {
             get
             {
@@ -85,9 +84,9 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
 
         public int Size { get; private set; }
 
-        public Tensor<T> Apply(Func<T, T> func)
+        public Tensor Apply(Func<float, float> func)
         {
-            var result = new Tensor<T>(_shape);
+            var result = new Tensor(_shape);
             for (int i = 0; i < Size; i++)
             {
                 result._data[i] = func(_data[i]);
@@ -95,26 +94,16 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             return result;
         }
 
-        public Tensor<T> Clone()
+        public Tensor Clone()
         {
-            var clone = new Tensor<T>(_shape);
+            var clone = new Tensor(_shape);
             Array.Copy(_data, clone._data, Size);
             return clone;
         }
 
-        public Tensor<TTarget> ConvertTo<TTarget>() where TTarget : INumber<TTarget>
+        public float[] Flatten()
         {
-            var targetTensor = new Tensor<TTarget>(_shape);
-            for (int i = 0; i < Size; i++)
-            {
-                targetTensor._data[i] = (TTarget)Convert.ChangeType(_data[i], typeof(TTarget));
-            }
-            return targetTensor;
-        }
-
-        public T[] Flatten()
-        {
-            return (T[])_data.Clone();
+            return (float[])_data.Clone();
         }
 
         public bool IsEmpty()

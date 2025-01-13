@@ -1,26 +1,25 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions;
-using System.Numerics;
 
 namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
-    public partial struct Tensor<T> : ITensorAggregationOperations<T> where T : INumber<T>
+    public partial struct Tensor : ITensorAggregationOperations
     {
-        public T Max()
+        public float Max()
         {
             throw new NotImplementedException();
         }
 
-        public T Mean()
+        public float Mean()
         {
             throw new NotImplementedException();
         }
 
-        public T Min()
+        public float Min()
         {
             throw new NotImplementedException();
         }
 
-        public T Sum()
+        public float Sum()
         {
             throw new NotImplementedException();
         }
