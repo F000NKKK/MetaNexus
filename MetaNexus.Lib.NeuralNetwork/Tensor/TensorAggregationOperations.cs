@@ -4,24 +4,41 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
     public partial struct Tensor : ITensorAggregationOperations
     {
+
+        // Нахождение максимального элемента в тензоре
         public float Max()
         {
-            throw new NotImplementedException();
+            if (_data == null || _data.Length == 0)
+                throw new InvalidOperationException("Тензор пуст");
+
+            return _data.Max();
         }
 
-        public float Mean()
-        {
-            throw new NotImplementedException();
-        }
-
+        // Нахождение минимального элемента в тензоре
         public float Min()
         {
-            throw new NotImplementedException();
+            if (_data == null || _data.Length == 0)
+                throw new InvalidOperationException("Тензор пуст");
+
+            return _data.Min();
         }
 
+        // Вычисление среднего значения всех элементов тензора
+        public float Avg()
+        {
+            if (_data == null || _data.Length == 0)
+                throw new InvalidOperationException("Тензор пуст");
+
+            return _data.Average();
+        }
+
+        // Вычисление суммы всех элементов тензора
         public float Sum()
         {
-            throw new NotImplementedException();
+            if (_data == null || _data.Length == 0)
+                throw new InvalidOperationException("Тензор пуст");
+
+            return _data.Sum();
         }
     }
 }
