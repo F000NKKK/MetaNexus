@@ -1,10 +1,12 @@
-﻿namespace MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions
+﻿using System.Numerics;
+
+namespace MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions
 {
     /// <summary>
     /// Интерфейс для работы с тензорами на GPU.
     /// Предоставляет методы для передачи данных на GPU, выполнения вычислений и извлечения данных с устройства.
     /// </summary>
-    public interface ITensorGPU<T> where T : struct
+    public interface ITensorGPU<T> where T : INumber<T>
     {
         /// <summary>
         /// Переносит данные на GPU.
