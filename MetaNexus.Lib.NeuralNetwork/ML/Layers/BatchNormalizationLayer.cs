@@ -1,42 +1,56 @@
-﻿using MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions;
+﻿using MetaNexus.Lib.NeuralNetwork.Tensors;
+using MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions;
+using System;
 
 namespace MetaNexus.Lib.NeuralNetwork.ML.Layers
 {
+    /// <summary>
+    /// Класс для слоя пакетной нормализации.
+    /// </summary>
     public class BatchNormalizationLayer : Layer
     {
         private int _size;
-        private float[] _gamma;
-        private float[] _beta;
-        private float[] _mean;
-        private float[] _variance;
+        private Tensor _gamma;
+        private Tensor _beta;
+        private Tensor _mean;
+        private Tensor _variance;
 
+        /// <summary>
+        /// Конструктор для слоя пакетной нормализации.
+        /// </summary>
+        /// <param name="size">Размер слоя (количество нейронов).</param>
         public BatchNormalizationLayer(int size) : base(size)
         {
             _size = size;
-            _gamma = new float[size]; // Гамма (масштабирование)
-            _beta = new float[size];  // Бета (сдвиг)
-            _mean = new float[size];  // Среднее
-            _variance = new float[size]; // Дисперсия
+            _gamma = new Tensor(new int[] { size }); // Гамма (масштабирование)
+            _beta = new Tensor(new int[] { size });  // Бета (сдвиг)
+            _mean = new Tensor(new int[] { size });  // Среднее
+            _variance = new Tensor(new int[] { size }); // Дисперсия
 
             // Инициализация гамма и бета
             for (int i = 0; i < size; i++)
             {
-                _gamma[i] = 1.0f;
-                _beta[i] = 0.0f;
+                _gamma[0, i] = 1.0f;
+                _beta[0, i] = 0.0f;
             }
         }
 
-        public override float[] Forward(float[] input)
+        /// <summary>
+        /// Прямой проход через слой пакетной нормализации.
+        /// </summary>
+        /// <param name="input">Входной тензор.</param>
+        /// <returns>Нормализованный выходной тензор.</returns>
+        public override Tensor Forward(Tensor input)
         {
-            // Нормализуем данные: (x - mean) / sqrt(variance + epsilon)
+            // Используем методы нормализации из Tensor
             float epsilon = 1e-8f;
-            float[] normalized = new float[input.Length];
 
-            for (int i = 0; i < _size; i++)
-            {
-                // Пример нормализации: тут предполагается, что mean и variance заданы заранее
-                normalized[i] = (_gamma[i] * (input[i] - _mean[i])) / MathF.Sqrt(_variance[i] + epsilon) + _beta[i];
-            }
+            // Применение пакетной нормализации (x - mean) / sqrt(variance + epsilon)
+            // Мы предполагаем, что _mean и _variance уже вычислены (или их можно вычислить в процессе)
+            Tensor normalized = input.BatchNormalize(_mean, _variance);
+
+            // Масштабирование и сдвиг с использованием гаммы и беты
+            normalized = _gamma * normalized + _beta;
 
             return normalized;
         }

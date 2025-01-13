@@ -55,47 +55,47 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
 
             Size = size;
             InputSize = inputSize;
-            this._weights = weights;
-            this._biases = biases;
+            this.weights = weights;
+            this.biases = biases;
         }
 
         void ILayer.InitializeWeightsAndBiases()
         {
-            _weights = new Tensor(new int[] { InputSize, Size });
-            _biases = new Tensor(new int[] { Size });
+            weights = new Tensor(new int[] { InputSize, Size });
+            biases = new Tensor(new int[] { Size });
 
             for (int i = 0; i < InputSize; i++)
             {
                 for (int j = 0; j < Size; j++)
                 {
-                    _weights[i, j] = (float)(random.NextDouble() * 2.0 - 1.0);
+                    weights[i, j] = (float)(random.NextDouble() * 2.0 - 1.0);
                 }
             }
 
             for (int i = 0; i < Size; i++)
             {
-                _biases[i] = (float)(random.NextDouble() * 2.0 - 1.0);
+                biases[i] = (float)(random.NextDouble() * 2.0 - 1.0);
             }
         }
 
-        public Tensor GetWeights() => _weights;
+        public Tensor GetWeights() => weights;
 
         public void SetWeights(Tensor newWeights)
         {
             if (newWeights.Shape[0] != InputSize || newWeights.Shape[1] != Size)
                 throw new ArgumentException("Размеры нового тензора весов не совпадают с размерами слоя.");
 
-            _weights = newWeights;
+            weights = newWeights;
         }
 
-        public Tensor GetBiases() => _biases;
+        public Tensor GetBiases() => biases;
 
         public void SetBiases(Tensor newBiases)
         {
             if (newBiases.Shape[0] != Size)
                 throw new ArgumentException("Размеры нового тензора смещений не совпадают с размерами слоя.");
 
-            _biases = newBiases;
+            biases = newBiases;
         }
 
         public abstract Tensor Forward(Tensor input);
@@ -103,12 +103,12 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
         /// <summary>
         /// Тензор смещений для слоя.
         /// </summary>
-        private Tensor _biases;
+        public Tensor biases;
 
         /// <summary>
         /// Тензор весов для слоя.
         /// </summary>
-        private Tensor _weights;
+        public Tensor weights;
 
         /// <summary>
         /// Размер слоя (количество нейронов в слое).

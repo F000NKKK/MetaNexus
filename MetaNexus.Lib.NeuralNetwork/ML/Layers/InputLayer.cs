@@ -1,4 +1,5 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions;
+using MetaNexus.Lib.NeuralNetwork.Tensors;
 
 public class InputLayer : Layer
 {
@@ -6,16 +7,16 @@ public class InputLayer : Layer
     /// Конструктор для входного слоя.
     /// </summary>
     /// <param name="inputSize">Количество нейронов во входном слое.</param>
-    public InputLayer(int inputSize) : base(inputSize) // Для входного слоя не нужно передавать inputSize
+    public InputLayer(int inputSize) : base(inputSize)
     {
     }
 
     /// <summary>
     /// Метод для выполнения прямого прохода через входной слой.
     /// </summary>
-    /// <param name="input">Входные данные.</param>
-    /// <returns>Те же самые входные данные.</returns>
-    public override float[] Forward(float[] input)
+    /// <param name="input">Входные данные в виде тензора.</param>
+    /// <returns>Те же самые входные данные в виде тензора.</returns>
+    public override Tensor Forward(Tensor input)
     {
         return input; // Входной слой просто передает входные данные
     }
