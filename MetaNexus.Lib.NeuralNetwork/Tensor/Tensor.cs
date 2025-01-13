@@ -27,6 +27,17 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             _data = new T[Size];
         }
 
+        public Tensor(int[] shape, T[] data)
+        {
+            _shape = shape ?? throw new ArgumentNullException(nameof(shape));
+            Size = 1;
+            foreach (var dim in shape)
+            {
+                Size *= dim;
+            }
+            _data = data;
+        }
+
         public T this[params int[] indices]
         {
             get
