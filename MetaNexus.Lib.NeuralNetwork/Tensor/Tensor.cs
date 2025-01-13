@@ -11,7 +11,11 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
         private T[] _data;
         private int[] _shape;
 
-        // Конструктор для создания тензора из данных и формы
+        /// <summary>
+        /// Конструктор для создания многомерного тензора с заданной формой.
+        /// Создает тензор с заданными размерами для каждого измерения.
+        /// </summary>
+        /// <param name="shape">Массив, представляющий форму тензора (размерности для каждого измерения).</param>
         public Tensor(int[] shape)
         {
             _shape = shape ?? throw new ArgumentNullException(nameof(shape));

@@ -3,12 +3,11 @@ using System.Numerics;
 
 namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
-    internal struct TensorCUDA<T> : ITensorDevice<T> where T : INumber<T>
+    internal struct TensorCPU<T> : ITensorDevice<T> where T : INumber<T>
     {
-        public TensorCUDA(int[] shape)
+        public TensorCPU(int[] shape)
         {
         }
-
         public void ExecuteKernel(string kernelCode)
         {
             throw new NotImplementedException();

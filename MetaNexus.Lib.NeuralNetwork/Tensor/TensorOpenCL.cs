@@ -3,9 +3,9 @@ using System.Numerics;
 
 namespace MetaNexus.Lib.NeuralNetwork.Tensor
 {
-    internal struct TensorOpenCL<T> : ITensorGPU<T> where T : INumber<T>
+    internal struct TensorOpenCL<T> : ITensorDevice<T> where T : INumber<T>
     {
-        public TensorOpenCL()
+        public TensorOpenCL(int[] shape)
         {
         }
 
@@ -14,12 +14,12 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensor
             throw new NotImplementedException();
         }
 
-        public T[] GetDataFromGPU()
+        public T[] GetDataFromDevice()
         {
             throw new NotImplementedException();
         }
 
-        public void TransferToGPU(T[] data)
+        public void TransferToDevice(T[] data)
         {
             throw new NotImplementedException();
         }
