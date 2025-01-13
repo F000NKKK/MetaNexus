@@ -1,7 +1,7 @@
-﻿using MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions;
+﻿using MetaNexus.Lib.NeuralNetwork.Tensors.Abstractions;
 using System;
 
-namespace MetaNexus.Lib.NeuralNetwork.Tensor
+namespace MetaNexus.Lib.NeuralNetwork.Tensors
 {
     public partial struct Tensor : ITensorNormalizationOperations
     {

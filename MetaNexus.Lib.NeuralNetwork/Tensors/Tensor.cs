@@ -1,6 +1,6 @@
-﻿using MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions;
+﻿using MetaNexus.Lib.NeuralNetwork.Tensors.Abstractions;
 
-namespace MetaNexus.Lib.NeuralNetwork.Tensor
+namespace MetaNexus.Lib.NeuralNetwork.Tensors
 {
     /// <summary>
     /// Структура Tensor представляет многомерный массив числовых данных с поддержкой операций над тензорами.

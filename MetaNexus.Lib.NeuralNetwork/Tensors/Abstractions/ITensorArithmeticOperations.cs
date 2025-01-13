@@ -1,4 +1,4 @@
-﻿namespace MetaNexus.Lib.NeuralNetwork.Tensor.Abstractions
+﻿namespace MetaNexus.Lib.NeuralNetwork.Tensors.Abstractions
 {
     /// <summary>
     /// Интерфейс для выполнения базовых арифметических операций с тензорами.

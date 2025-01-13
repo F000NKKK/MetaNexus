@@ -1,11 +1,15 @@
-﻿namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
+﻿using MetaNexus.Lib.NeuralNetwork.Tensors;
+
+namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
 {
     public abstract class Layer
     {
-        public float[] Biases { get; private set; }
-        public float[,] Weights { get; private set; }
+        public Tensor Biases { get; private set; }
+        public Tensor Weights { get; private set; }
         public int Size { get; protected set; }
         public int InputSize { get; protected set; }
+
+        private static Random random = new Random(DateTime.Now.Millisecond);
 
         public Layer(int inputSize, int size)
         {
@@ -15,7 +19,7 @@
             Size = size;
             InputSize = inputSize;
 
-            InitializeWeights();
+            InitializeWeightsAndBiases();
         }
 
         public Layer(int inputSize)
@@ -26,74 +30,70 @@
             Size = inputSize;
             InputSize = inputSize;
 
-            InitializeWeights();
+            InitializeWeightsAndBiases();
         }
 
-        public abstract float[] Forward(float[] input);
+        public abstract Tensor Forward(Tensor input);
 
-        private void InitializeWeights()
+        private void InitializeWeightsAndBiases()
         {
-            Random random = new Random(DateTime.Now.Millisecond);
-            Weights = new float[InputSize, Size];
-            Console.WriteLine("Инициализация весов:");
+            Weights = new Tensor(new int[] { InputSize, Size });
+            Biases = new Tensor(new int[] { Size });
 
+            // Инициализация весов и смещений случайными значениями
+            Console.WriteLine("Инициализация весов и смещений:");
+
+            // Инициализация весов
             for (int i = 0; i < InputSize; i++)
             {
                 for (int j = 0; j < Size; j++)
                 {
                     Weights[i, j] = (float)(random.NextDouble() * 2.0 - 1.0);
-                    // Логирование значений весов
                     Console.WriteLine($"Вес для (нейрон {i}, {j}): {Weights[i, j]}");
                 }
             }
 
             // Инициализация смещений
-            Biases = Enumerable.Range(0, Size)
-                               .Select(_ => (float)(random.NextDouble() * 2.0 - 1.0))
-                               .ToArray();
-
-            // Логирование значений смещений
-            Console.WriteLine("Инициализация смещений:");
-            foreach (var bias in Biases)
+            for (int i = 0; i < Size; i++)
             {
-                Console.WriteLine($"Смещение: {bias}");
+                Biases[i] = (float)(random.NextDouble() * 2.0 - 1.0);
+                Console.WriteLine($"Смещение для нейрона {i}: {Biases[i]}");
             }
         }
 
         public void SaveWeights(BinaryWriter writer)
         {
-            foreach (var weight in Weights)
+            // Сохранение весов и смещений в бинарный файл
+            for (int i = 0; i < Weights.Shape[0]; i++)
             {
-                writer.Write(weight);
+                for (int j = 0; j < Weights.Shape[1]; j++)
+                {
+                    writer.Write(Weights[i, j]);
+                }
             }
 
-            Biases.ToList().ForEach(bias => writer.Write(bias));
+            for (int i = 0; i < Biases.Shape[0]; i++)
+            {
+                writer.Write(Biases[i]);
+            }
         }
 
         public void LoadWeights(BinaryReader reader)
         {
-            for (int i = 0; i < InputSize; i++)
+            // Загрузка весов
+            for (int i = 0; i < Weights.Shape[0]; i++)
             {
-                for (int j = 0; j < Size; j++)
+                for (int j = 0; j < Weights.Shape[1]; j++)
                 {
                     Weights[i, j] = reader.ReadSingle();
                 }
             }
 
-            Biases = Enumerable.Range(0, Size)
-                               .Select(_ => reader.ReadSingle())
-                               .ToArray();
-        }
-
-        // Нормализация функции
-        protected float[] Normalize(float[] input)
-        {
-            float mean = input.Average();
-            float variance = input.Select(val => (val - mean) * (val - mean)).Average();
-            float stddev = MathF.Sqrt(variance);
-
-            float[] normalized = input.Select(x => (x - mean) / (stddev + 1e-8f)).ToArray();
-            return normalized;
+            // Загрузка смещений
+            for (int i = 0; i < Biases.Shape[0]; i++)
+            {
+                Biases[i] = reader.ReadSingle();
+            }
         }
     }
 }
