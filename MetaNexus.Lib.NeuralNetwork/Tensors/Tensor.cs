@@ -98,7 +98,8 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             }
         }
 
-        public float this[int indice]
+
+        private float this[int indice]
         {
             get
             {

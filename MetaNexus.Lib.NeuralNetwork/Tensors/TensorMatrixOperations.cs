@@ -76,6 +76,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
         {
             float[] L = new float[n * n];
             float[] U = new float[n * n];
+
             Array.Copy(matrixData, U, matrixData.Length);
 
             for (int i = 0; i < n; i++)

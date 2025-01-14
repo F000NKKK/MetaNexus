@@ -38,7 +38,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 throw new InvalidOperationException("Новая форма должна содержать такое же количество элементов, как и старая.");
 
             var result = new Tensor(newShape);
-            Array.Copy(_data.Span.ToArray(), result._data.Span.ToArray(), Size);
+            _data.CopyTo(result._data);
             return result;
         }
 

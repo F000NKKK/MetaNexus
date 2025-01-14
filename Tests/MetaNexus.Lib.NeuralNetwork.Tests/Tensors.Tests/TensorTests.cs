@@ -1,4 +1,5 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensors;
+using Newtonsoft.Json;
 
 namespace MetaNexus.Lib.NeuralNetwork.Tests
 {
@@ -144,6 +145,166 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             // Проверяем, что выбрасывается исключение при попытке индексации за пределами массива
             Assert.That(() => tensor[3, 0], Throws.TypeOf<ArgumentException>());
             Assert.That(() => tensor[0, 2], Throws.TypeOf<ArgumentException>());
+        }
+
+        // Тест для исключения, если размер данных не соответствует размеру тензора
+        [Test]
+        public void Constructor_WithShapeAndData_ThrowsExceptionWhenDataSizeIsIncorrect()
+        {
+            // Arrange
+            int[] shape = { 2, 3 };
+            float[] data = { 1f, 2f }; // Недостаточное количество данных
+
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() => new Tensor(shape, data));
+            Assert.That(ex.Message, Is.EqualTo("Размер массива данных не соответствует размеру тензора."));
+        }
+
+        // Тест для исключения, если shape равен null
+        [Test]
+        public void Constructor_WithNullShape_ThrowsArgumentNullException()
+        {
+            // Arrange
+            float[] data = { 1f, 2f, 3f };
+
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentNullException>(() => new Tensor(null, data));
+            Assert.That(ex.ParamName, Is.EqualTo("shape"));
+        }
+
+        // Тест для исключения, если data равен null
+        [Test]
+        public void Constructor_WithNullData_ThrowsArgumentNullException()
+        {
+            // Arrange
+            int[] shape = { 2, 3 };
+
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentNullException>(() => new Tensor(shape, null));
+            Assert.That(ex.ParamName, Is.EqualTo("data"));
+        }
+
+        // Тест для конструктора копирования (глубокое копирование)
+        [Test]
+        public void Constructor_WithExistingTensor_CreatesDeepCopy()
+        {
+            // Arrange
+            int[] shape = { 2, 2 };
+            float[] data = { 1f, 2f, 3f, 4f };
+            var originalTensor = new Tensor(shape, data);
+
+            // Act
+            var copiedTensor = new Tensor(originalTensor);
+
+            // Assert
+            Assert.That(originalTensor.Shape, Is.EqualTo(copiedTensor.Shape));
+            Assert.That(originalTensor.Size, Is.EqualTo(copiedTensor.Size));
+            for (int i = 0; i < shape[0]; i++)
+            {
+                for (int j = 0; j < shape[1]; j++)
+                {
+                    Assert.That(originalTensor[i, j], Is.EqualTo(copiedTensor[i, j]));
+                }
+            }
+
+            // Изменим данные в оригинальном тензоре и проверим, что копия не изменилась
+            originalTensor[0, 0] = 999f;
+            Assert.That(originalTensor[0, 0], Is.Not.EqualTo(copiedTensor[0, 0]));
+        }
+
+        // Тест для многомерной индексации через params int[] indices
+        [Test]
+        public void Indexer_WithMultiDimensionalIndices_ReturnsCorrectValue()
+        {
+            // Arrange
+            int[] shape = { 2, 3 };
+            float[] data = { 1f, 2f, 3f, 4f, 5f, 6f };
+            var tensor = new Tensor(shape, data);
+
+            // Act & Assert
+            Assert.That(tensor[0, 0], Is.EqualTo(1f));
+            Assert.That(tensor[1, 0], Is.EqualTo(4f));
+            Assert.That(tensor[0, 1], Is.EqualTo(2f));
+            Assert.That(tensor[1, 2], Is.EqualTo(6f));
+        }
+
+        // Тест для выброса исключения при неверном количестве индексов
+        [Test]
+        public void Indexer_WithIncorrectNumberOfIndices_ThrowsArgumentException()
+        {
+            // Arrange
+            int[] shape = { 2, 3 };
+            float[] data = { 1f, 2f, 3f, 4f, 5f, 6f };
+            var tensor = new Tensor(shape, data);
+
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                float a = tensor[0];
+            }); // Один индекс вместо двух
+            Assert.That(ex.Message, Is.EqualTo("Количество индексов не соответствует рангу тензора."));
+        }
+
+        // Тест для выброса исключения при индексах, выходящих за пределы массива
+        [Test]
+        public void Indexer_WithOutOfBoundsIndices_ThrowsArgumentException()
+        {
+            // Arrange
+            int[] shape = { 2, 3 };
+            float[] data = { 1f, 2f, 3f, 4f, 5f, 6f };
+            var tensor = new Tensor(shape, data);
+
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                float a = tensor[2, 0];
+            }); // Индекс вне допустимого диапазона
+            Assert.That(ex.Message, Is.EqualTo("Индексы выходят за пределы массива."));
+        }
+
+        // Тест для FlattenFloatArray, чтобы проверить правильность возвращаемого массива
+        [Test]
+        public void FlattenFloatArray_ReturnsCorrectArray()
+        {
+            // Arrange
+            int[] shape = { 2, 3 };
+            float[] data = { 1f, 2f, 3f, 4f, 5f, 6f };
+            var tensor = new Tensor(shape, data);
+
+            // Act
+            float[] flattened = tensor.FlattenFloatArray();
+
+            // Assert
+            Assert.That(flattened.Length, Is.EqualTo(data.Length));
+            for (int i = 0; i < data.Length; i++)
+            {
+                Assert.That(flattened[i], Is.EqualTo(data[i]));
+            }
+        }
+
+        // Тест для IsEmpty, чтобы проверить, что метод правильно определяет пустой тензор
+        [Test]
+        public void IsEmpty_ReturnsTrueForEmptyTensor()
+        {
+            // Arrange
+            int[] shape = { 0, 0 };
+            var tensor = new Tensor(shape);
+
+            // Act & Assert
+            Assert.That(tensor.IsEmpty(), Is.True);
+        }
+
+        // Тест для IsEmpty, чтобы проверить, что метод правильно определяет непустой тензор
+        [Test]
+        public void IsEmpty_ReturnsFalseForNonEmptyTensor()
+        {
+            // Arrange
+            int[] shape = { 2, 3 };
+            float[] data = { 1f, 2f, 3f, 4f, 5f, 6f };
+            var tensor = new Tensor(shape, data);
+
+            // Act & Assert
+            Assert.That(tensor.IsEmpty(), Is.False);
         }
     }
 }
