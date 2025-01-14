@@ -1,6 +1,5 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.ML.Abstractions;
 using MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions;
-using MetaNexus.Lib.NeuralNetwork.ML.Models;
 using MetaNexus.Lib.NeuralNetwork.Tensors;
 using Newtonsoft.Json;
 
@@ -11,74 +10,6 @@ public class NeuralNetwork : INetwork
     public NeuralNetwork()
     {
         layers = new List<ILayer>();
-    }
-
-    public NeuralNetwork(string jsonConfig)
-    {
-        layers = new List<ILayer>();
-
-        // Десериализация JSON-конфигурации
-        var config = JsonConvert.DeserializeObject<NetworkConfig>(jsonConfig);
-
-        if (config == null)
-        {
-            throw new ArgumentException("Ошибка в конфигурации нейронной сети.");
-        }
-
-        // Создание слоев на основе конфигурации
-        int inputSize = config.InputSize;
-
-        foreach (var layerConfig in config.Layers)
-        {
-            ILayer layer = null;
-
-            // Используем словарь для сопоставления строк с функциями
-            var activationFunctions = new Dictionary<string, Layer.ActivationFunc>
-            {
-                { "relu", Tensor.ApplyReLUStatic },
-                { "sigmoid", Tensor.ApplySigmoidStatic },
-                { "tanh", Tensor.ApplyTanhStatic },
-                { "softmax", Tensor.ApplySoftmaxStatic },
-                { "swish", Tensor.ApplySwishStatic },
-                { "identity", Tensor.ApplyIdentityStatic }
-            };
-
-            var activationPrimeFunctions = new Dictionary<string, Layer.ActivationPrimeFunc>
-            {
-                { "relu", Tensor.ApplyReLUPrimeStatic },
-                { "sigmoid", Tensor.ApplySigmoidPrimeStatic },
-                { "tanh", Tensor.ApplyTanhPrimeStatic },
-                { "softmax", Tensor.ApplySoftplusPrimeStatic }, // Пример для Softmax
-                { "swish", Tensor.ApplySwishPrimeStatic },
-                { "identity", Tensor.ApplyIdentityStatic }
-            };
-
-            if (!activationFunctions.ContainsKey(layerConfig.Activation) ||
-                !activationPrimeFunctions.ContainsKey(layerConfig.Activation))
-            {
-                throw new ArgumentException($"Неизвестная функция активации или её производная: {layerConfig.Activation}");
-            }
-
-            Layer.ActivationFunc activationFunc = activationFunctions[layerConfig.Activation];
-            Layer.ActivationPrimeFunc activationPrimeFunc = activationPrimeFunctions[layerConfig.Activation];
-
-            if (layerConfig.Type == "input")
-            {
-                layer = new InputLayer(inputSize, layerConfig.Size, activationFunc, activationPrimeFunc);
-                inputSize = layerConfig.Size;
-            }
-            else if (layerConfig.Type == "dense")
-            {
-                layer = new DenseLayer(inputSize, layerConfig.Size, activationFunc, activationPrimeFunc);
-                inputSize = layerConfig.Size;
-            }
-            else
-            {
-                throw new ArgumentException($"Неизвестный тип слоя: {layerConfig.Type}");
-            }
-
-            layers.Add(layer);
-        }
     }
 
     /// <summary>
