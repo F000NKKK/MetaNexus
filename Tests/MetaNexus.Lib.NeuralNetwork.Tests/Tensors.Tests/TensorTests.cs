@@ -168,7 +168,9 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             float[] data = { 1f, 2f, 3f };
 
             // Act & Assert
+#pragma warning disable CS8625 // Литерал, равный NULL, не может быть преобразован в ссылочный тип, не допускающий значение NULL.
             var ex = Assert.Throws<ArgumentNullException>(() => new Tensor(null, data));
+#pragma warning restore CS8625 // Литерал, равный NULL, не может быть преобразован в ссылочный тип, не допускающий значение NULL.
             Assert.That(ex.ParamName, Is.EqualTo("shape"));
         }
 
@@ -180,7 +182,9 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             int[] shape = { 2, 3 };
 
             // Act & Assert
+#pragma warning disable CS8625 // Литерал, равный NULL, не может быть преобразован в ссылочный тип, не допускающий значение NULL.
             var ex = Assert.Throws<ArgumentNullException>(() => new Tensor(shape, null));
+#pragma warning restore CS8625 // Литерал, равный NULL, не может быть преобразован в ссылочный тип, не допускающий значение NULL.
             Assert.That(ex.ParamName, Is.EqualTo("data"));
         }
 
@@ -199,6 +203,9 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             // Assert
             Assert.That(originalTensor.Shape, Is.EqualTo(copiedTensor.Shape));
             Assert.That(originalTensor.Size, Is.EqualTo(copiedTensor.Size));
+            Assert.That(originalTensor.Rank, Is.EqualTo(copiedTensor.Rank));
+            Assert.That(originalTensor.Data, Is.EqualTo(copiedTensor.Data));
+            Assert.That(copiedTensor.Data, Is.EqualTo(data));
             for (int i = 0; i < shape[0]; i++)
             {
                 for (int j = 0; j < shape[1]; j++)
@@ -211,6 +218,43 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             originalTensor[0, 0] = 999f;
             Assert.That(originalTensor[0, 0], Is.Not.EqualTo(copiedTensor[0, 0]));
         }
+
+        [Test]
+        public void Indexer_WithIncorrectNumberOfIndices_ThrowsArgumentException()
+        {
+            // Arrange
+            int[] shape = { 2, 3 };
+            float[] data = { 1f, 2f, 3f, 4f, 5f, 6f };
+            var tensor = new Tensor(shape, data);
+
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                // Попытка использовать один индекс при тензоре с двумя измерениями
+                float a = tensor[0]; // Один индекс вместо двух
+            });
+
+            Assert.That(ex.Message, Is.EqualTo("Количество индексов не соответствует рангу тензора."));
+        }
+
+        [Test]
+        public void Indexer_WithOutOfRangeIndices_ThrowsArgumentException()
+        {
+            // Arrange
+            int[] shape = { 2, 3 };
+            float[] data = { 1f, 2f, 3f, 4f, 5f, 6f };
+            var tensor = new Tensor(shape, data);
+
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                // Попытка использовать индекс, выходящий за пределы размерности
+                float a = tensor[2, 1]; // Индекс 2 для первого измерения выходит за пределы (только 0 и 1 допустимы)
+            });
+
+            Assert.That(ex.Message, Is.EqualTo("Индексы выходят за пределы массива."));
+        }
+
 
         // Тест для многомерной индексации через params int[] indices
         [Test]
@@ -226,23 +270,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             Assert.That(tensor[1, 0], Is.EqualTo(4f));
             Assert.That(tensor[0, 1], Is.EqualTo(2f));
             Assert.That(tensor[1, 2], Is.EqualTo(6f));
-        }
-
-        // Тест для выброса исключения при неверном количестве индексов
-        [Test]
-        public void Indexer_WithIncorrectNumberOfIndices_ThrowsArgumentException()
-        {
-            // Arrange
-            int[] shape = { 2, 3 };
-            float[] data = { 1f, 2f, 3f, 4f, 5f, 6f };
-            var tensor = new Tensor(shape, data);
-
-            // Act & Assert
-            var ex = Assert.Throws<ArgumentException>(() =>
-            {
-                float a = tensor[0];
-            }); // Один индекс вместо двух
-            Assert.That(ex.Message, Is.EqualTo("Количество индексов не соответствует рангу тензора."));
         }
 
         // Тест для выброса исключения при индексах, выходящих за пределы массива

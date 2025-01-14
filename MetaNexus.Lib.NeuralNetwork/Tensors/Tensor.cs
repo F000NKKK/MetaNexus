@@ -79,7 +79,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 }
 
                 int flatIndex = GetFlatIndex(indices);
-                return _data.Span[flatIndex];  // Чтение через Span
+                return this[flatIndex];  // Чтение через Span
             }
             set
             {
@@ -94,7 +94,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 }
 
                 int flatIndex = GetFlatIndex(indices);
-                _data.Span[flatIndex] = value;  // Запись через Span
+                this[flatIndex] = value;  // Запись через Span
             }
         }
 
