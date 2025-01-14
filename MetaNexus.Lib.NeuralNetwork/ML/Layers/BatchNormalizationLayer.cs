@@ -9,29 +9,25 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers
     /// </summary>
     public class BatchNormalizationLayer : Layer
     {
-        private int _size;
         private Tensor _gamma;
         private Tensor _beta;
-        private Tensor _mean;
+        private Tensor _avg;
         private Tensor _variance;
+        private bool _training;
 
-        /// <summary>
-        /// Конструктор для слоя пакетной нормализации.
-        /// </summary>
-        /// <param name="size">Размер слоя (количество нейронов).</param>
-        public BatchNormalizationLayer(int size) : base(size)
+        public BatchNormalizationLayer(int inputSize, int size, bool training = true) : base(inputSize, size)
         {
-            _size = size;
             _gamma = new Tensor(new int[] { size }); // Гамма (масштабирование)
             _beta = new Tensor(new int[] { size });  // Бета (сдвиг)
-            _mean = new Tensor(new int[] { size });  // Среднее
+            _avg = new Tensor(new int[] { size });  // Среднее
             _variance = new Tensor(new int[] { size }); // Дисперсия
+            _training = training;  // Флаг для определения, находимся ли в процессе обучения
 
             // Инициализация гамма и бета
             for (int i = 0; i < size; i++)
             {
-                _gamma[0, i] = 1.0f;
-                _beta[0, i] = 0.0f;
+                _gamma[i] = 1.0f;
+                _beta[i] = 0.0f;
             }
         }
 
@@ -42,17 +38,7 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers
         /// <returns>Нормализованный выходной тензор.</returns>
         public override Tensor Forward(Tensor input)
         {
-            // Используем методы нормализации из Tensor
-            float epsilon = 1e-8f;
-
-            // Применение пакетной нормализации (x - mean) / sqrt(variance + epsilon)
-            // Мы предполагаем, что _mean и _variance уже вычислены (или их можно вычислить в процессе)
-            Tensor normalized = input.BatchNormalize(_mean, _variance);
-
-            // Масштабирование и сдвиг с использованием гаммы и беты
-            normalized = _gamma * normalized + _beta;
-
-            return normalized;
+            throw new NotImplementedException();
         }
     }
 }

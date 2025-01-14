@@ -19,13 +19,19 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
         public Tensor(int[] shape)
         {
             _shape = shape ?? throw new ArgumentNullException(nameof(shape));
-            Size = 1;
+            long tempSize = 1L;
             foreach (var dim in shape)
             {
-                Size *= dim;
+                tempSize *= dim;
+                if (tempSize > int.MaxValue) // Проверяем, чтобы размер не превышал int.MaxValue
+                {
+                    throw new InvalidOperationException("Размер тензора слишком велик для использования в качестве массива.");
+                }
             }
+            Size = (int)tempSize;
             _data = new float[Size];
         }
+
 
         /// <summary>
         /// Конструктор для создания многомерного тензора с заданной формой и исходными данными.
