@@ -3,11 +3,7 @@ using MetaNexus.Lib.NeuralNetwork.Tensors;
 
 public class InputLayer : Layer
 {
-    /// <summary>
-    /// Конструктор для входного слоя.
-    /// </summary>
-    /// <param name="inputSize">Количество нейронов во входном слое.</param>
-    public InputLayer(int inputSize) : base(inputSize)
+    public InputLayer(int inputSize, int size, ActivationFunc activationFunction, ActivationPrimeFunc activationPrimeFunction) : base(inputSize, size, activationFunction, activationPrimeFunction)
     {
     }
 
@@ -18,6 +14,7 @@ public class InputLayer : Layer
     /// <returns>Те же самые входные данные в виде тензора.</returns>
     public override Tensor Forward(Tensor input)
     {
+        this.input = input;
         return input; // Входной слой просто передает входные данные
     }
 }

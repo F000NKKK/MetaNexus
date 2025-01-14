@@ -43,5 +43,19 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
         /// Инициализация весов и смещений случайными значениями.
         /// </summary>
         void InitializeWeightsAndBiases();
+
+        /// <summary>
+        /// Применяет функцию активации к входному тензору.
+        /// </summary>
+        /// <param name="input">Входной тензор.</param>
+        /// <returns>Результат применения функции активации.</returns>
+        Tensor ApplyActivation(Tensor input);
+
+        /// <summary>
+        /// Применяет производную функции активации к входному тензору.
+        /// </summary>
+        /// <param name="input">Входной тензор.</param>
+        /// <returns>Результат применения производной функции активации.</returns>
+        Tensor ApplyActivationPrime(Tensor input);
     }
 }

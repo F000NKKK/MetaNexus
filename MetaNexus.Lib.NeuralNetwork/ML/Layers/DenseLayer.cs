@@ -3,23 +3,23 @@ using MetaNexus.Lib.NeuralNetwork.Tensors;
 
 public class DenseLayer : Layer
 {
-    public string Activation { get; set; }
-
-    /// <summary>
-    /// Конструктор для полносвязного слоя.
-    /// </summary>
-    /// <param name="inputSize">Количество входных нейронов.</param>
-    /// <param name="size">Количество нейронов в слое.</param>
-    /// <param name="activation">Функция активации для слоя.</param>
-    public DenseLayer(int inputSize, int size, string activation) : base(inputSize, size)
+    // Конструктор слоя
+    public DenseLayer(int inputSize, int size) : base(inputSize, size)
     {
-        Activation = activation;
-        weights = new Tensor(new int[] { inputSize, size }); // Инициализация весов
-        biases = new Tensor(new int[] { 1, size }); // Инициализация смещений
+    }
 
-        ((ILayer)this).InitializeWeightsAndBiases();
+    public DenseLayer(int inputSize, int size, Tensor weights, Tensor biases) : base(inputSize, size, weights, biases)
+    {
+    }
 
-        Console.WriteLine($"Создан слой с {inputSize} входами и {size} нейронами. Активируем с функцией: {activation}");
+    public DenseLayer(int inputSize, int size, ActivationFunc activationFunction, ActivationPrimeFunc activationPrimeFunction)
+        : base(inputSize, size, activationFunction, activationPrimeFunction)
+    {
+    }
+
+    public DenseLayer(int inputSize, int size, Tensor weights, Tensor biases, ActivationFunc activationFunction, ActivationPrimeFunc activationPrimeFunction)
+        : base(inputSize, size, weights, biases, activationFunction, activationPrimeFunction)
+    {
     }
 
     /// <summary>
@@ -31,65 +31,44 @@ public class DenseLayer : Layer
     public override Tensor Forward(Tensor input)
     {
         this.input = input; // Сохраняем вход для использования в Backward
-        // Применение нормализации (если необходимо)
-        input = input.Normalize();  // Поясните, нужно ли это на уровне слоя
-
-        Console.WriteLine("Прямой проход через слой (Forward):");
 
         // Логирование входных данных
-        Console.WriteLine("Входные данные: " + string.Join(", ", input.ToString()));
+        Console.WriteLine("Прямой проход через слой (Forward):");
+        Console.WriteLine("Входные данные: " + input.ToString());
 
-        // Вычисление выхода слоя
+        // Формируем выходной тензор с размерностью [batch_size, size], где size — количество нейронов
         Tensor output = new Tensor(new int[] { input.Shape[0], Size });
 
+        // Процесс вычисления линейного выхода
         for (int i = 0; i < Size; i++)
         {
             float sum = 0.0f;
 
-            // Логика вычисления линейного выхода: сумма входов на веса
+            // Суммируем входы, умножаем на веса для каждого нейрона
             for (int j = 0; j < InputSize; j++)
             {
-                sum += input[j, 0] * weights[j, i];  // Используем веса для вычисления
+                sum += input[0, j] * weights[j, i];  // Суммируем продукты входных значений и весов
             }
 
             // Логирование каждого шага вычислений
             Console.WriteLine($"Для нейрона {i}: сумма входных значений и весов = {sum}");
 
             // Логирование смещений
-            Console.WriteLine($"Смещение для нейрона {i}: {biases[0, i]}");
+            Console.WriteLine($"Смещение для нейрона {i}: {biases[i]}");
 
             // Суммируем и добавляем смещение
-            output[0, i] = sum + biases[0, i];
+            output[0, i] = sum + biases[i];
         }
 
         // Логирование выхода до активации
         Console.WriteLine("Выход до активации: " + string.Join(", ", output.ToString()));
 
-        // Применение функции активации
+        // Применяем функцию активации
         Tensor activatedOutput = ApplyActivation(output);
 
         // Логирование выхода после активации
         Console.WriteLine("Выход после активации: " + string.Join(", ", activatedOutput.ToString()));
 
         return activatedOutput;
-    }
-
-    /// <summary>
-    /// Применение функции активации к тензору.
-    /// </summary>
-    /// <param name="input">Входной тензор.</param>
-    /// <returns>Тензор с примененной функцией активации.</returns>
-    private Tensor ApplyActivation(Tensor input)
-    {
-        Console.WriteLine("Применяем функцию активации...");
-
-        // Пример: Применение функции активации Sigmoid
-        if (Activation == "Sigmoid")
-        {
-            return input.ApplySigmoid();
-        }
-
-        // Если нужно добавить другие функции активации, их можно реализовать здесь.
-        throw new InvalidOperationException("Функция активации не поддерживается.");
     }
 }

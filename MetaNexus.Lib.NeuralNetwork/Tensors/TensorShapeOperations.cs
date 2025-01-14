@@ -1,5 +1,4 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensors.Abstractions;
-using System;
 
 namespace MetaNexus.Lib.NeuralNetwork.Tensors
 {
@@ -7,7 +6,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
     {
         public Tensor Transpose()
         {
-            if (_shape.Length != 2)
+            if (_shape.Count() != 2)
                 throw new InvalidOperationException("Транспонирование поддерживается только для двумерных тензоров.");
 
             var newShape = new int[] { _shape[1], _shape[0] };
@@ -23,6 +22,9 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
 
             return result;
         }
+
+        public Tensor Clip(float minValue, float maxValue) => new Tensor(_shape, this.Data.Select(x => Math.Clamp(x, minValue, maxValue)).ToArray());
+
 
         public Tensor Reshape(int[] newShape)
         {

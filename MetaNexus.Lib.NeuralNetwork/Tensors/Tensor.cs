@@ -1,4 +1,5 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensors.Abstractions;
+using Newtonsoft.Json;
 
 namespace MetaNexus.Lib.NeuralNetwork.Tensors
 {
@@ -66,7 +67,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                     throw new ArgumentException("Количество индексов не соответствует рангу тензора.");
 
                 int flatIndex = GetFlatIndex(indices);
-                return _data[flatIndex];
+                return this[flatIndex];
             }
             set
             {
@@ -74,10 +75,23 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                     throw new ArgumentException("Количество индексов не соответствует рангу тензора.");
 
                 int flatIndex = GetFlatIndex(indices);
-                _data[flatIndex] = value;
+                this[flatIndex] = value;
             }
         }
 
+        public float this[int indice]
+        {
+            get
+            {
+                return _data[indice];
+            }
+            set
+            {
+                _data[indice] = value;
+            }
+        }
+
+        public float[] Data => _data;
         public int[] Shape => _shape;
 
         public int Rank => _shape.Length;
@@ -101,9 +115,14 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             return clone;
         }
 
-        public float[] Flatten()
+        public float[] FlattenFloatArray()
         {
             return (float[])_data.Clone();
+        }
+        public Tensor Flatten()
+        {
+            // Создаем новый тензор с одномерным массивом
+            return new Tensor(new int[] { Size }, _data);
         }
 
         public bool IsEmpty()
@@ -146,6 +165,11 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             }
 
             return flatIndex;
+        }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
     }
 }

@@ -1,66 +1,48 @@
-﻿using MetaNexus.Lib.NeuralNetwork.Math.Normalizers;
-using MetaNexus.Lib.NeuralNetwork.Math.Normalizers.Abstractions;
-using MetaNexus.Lib.NeuralNetwork.ML;
+﻿using MetaNexus.Lib.NeuralNetwork.Tensors;
 
-namespace MetaNexus.App.DemoApp
+namespace SimpleNeuralNetwork
 {
-    internal class Program
+    class Program
     {
+        static NeuralNetwork nn = new NeuralNetwork();
+
         static void Main(string[] args)
         {
-            // Пример конфигурации нейронной сети в формате JSON
-            string jsonConfig = @"
-            {
-                'InputSize': 3, 
-                'Layers': [
-                    { 'Type': 'input', 'Size': 2 },
-                    { 'Type': 'dense', 'Size': 3, 'Activation': 'relu' },
-                    { 'Type': 'dense', 'Size': 1, 'Activation': 'sigmoid' }
-                ]
-            }";
+            // Архитектура сети
+            nn.AddLayer(new InputLayer(3, 3, Tensor.ApplyIdentityStatic, Tensor.ApplyIdentityStatic));
+            nn.AddLayer(new DenseLayer(3, 3, Tensor.ApplySwishStatic, Tensor.ApplySwishPrimeStatic));
+            nn.AddLayer(new DenseLayer(3, 3, Tensor.ApplySigmoidStatic, Tensor.ApplySigmoidPrimeStatic));
+            nn.AddLayer(new DenseLayer(3, 1, Tensor.ApplySoftplusStatic, Tensor.ApplySoftplusPrimeStatic));
 
-            // Путь к бинарному файлу с весами и смещениями
-            string binaryWeightsPath = "weights.bin";
+            float learningRate = 0.001f;
+            float decayRate = 0.9f;
 
-            try
+            var epochs = 1;
+
+            // Подготовка данных для обучения (входные данные и их зеркальные версии)
+            var trainingData = new List<(Tensor input, Tensor output)>
             {
-                // Проверка существования файла весов
-                if (!File.Exists(binaryWeightsPath))
+                (new Tensor(new int[] { 1, 3 }, new float[] { 1f, 2f, 3f }), new Tensor(new int[] { 1, 1 }, new float[] { 6f })),
+                (new Tensor(new int[] { 1, 3 }, new float[] { 4f, 5f, 6f }), new Tensor(new int[] { 1, 1 }, new float[] { 15f })),
+                (new Tensor(new int[] { 1, 3 }, new float[] { 7f, 8f, 9f }), new Tensor(new int[] { 1, 1 }, new float[] { 24f })),
+                // добавьте больше пар данных
+            };
+
+            // Тренировка сети с многопоточностью
+            for (int i = 0; i < epochs; i++)
+            {
+                foreach (var data in trainingData)
                 {
-                    Console.WriteLine($"Бинарный файл {binaryWeightsPath} не найден, создаем новый...");
-
-                    // Создание нейронной сети и сохранение весов в файл
-                    var neuralNetwork = new NeuralNetwork(jsonConfig);
-                    neuralNetwork.SaveWeights(binaryWeightsPath); // Сохраняем веса в бинарный файл
-                    Console.WriteLine($"Файл с весами {binaryWeightsPath} успешно создан.");
+                    nn.Train(data.input, data.output, learningRate);
                 }
-
-                // Теперь загружаем веса из файла
-                var networkWithWeights = new NeuralNetwork(jsonConfig, binaryWeightsPath, true);
-
-                float[] input = { 1.0f, 0.5f, -2.0f };
-
-                // Пример нормализации входных данных
-                var minMaxNormalizer = new MinMaxNormalizer(input);
-                float[] normalizedInputData = minMaxNormalizer.Normalize(input);
-
-                // Выполнение прогноза
-                var output = networkWithWeights.Predict(normalizedInputData);
-
-                // Пример денормализации выходных данных
-                float[] denormalizedOutputData = minMaxNormalizer.Denormalize(output);
-
-                // Вывод результатов
-                Console.WriteLine("Прогноз сети:");
-                foreach (var value in denormalizedOutputData)
-                {
-                    Console.WriteLine(value);
-                }
+                learningRate *= decayRate; // Обновляем learningRate
+                Console.WriteLine("Выходные данные: " + string.Join("; ", nn.Predict(new Tensor(new int[] { 1, 3 }, new float[] { 3f, 2f, 1f })).Data.ToList()));
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка: {ex.Message}");
-            }
+
+            // Прогнозируем результат
+            var output = nn.Predict(new Tensor(new int[] { 1, 3 }, new float[] { 3f, 2f, 1f }));
+            // Вывод данных из тензора как строки
+            Console.WriteLine("Выходные данные: " + string.Join("; ", output.Data.ToList()));
         }
     }
 }
