@@ -7,7 +7,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
         [SetUp]
         public void Setup()
         {
-            // Здесь можно выполнить настройку, если требуется
         }
 
         [Test]
