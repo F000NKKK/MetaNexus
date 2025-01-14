@@ -72,6 +72,13 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 if (indices.Length != _shape.Length)
                     throw new ArgumentException("Количество индексов не соответствует рангу тензора.");
 
+                // Проверяем, что индексы не выходят за пределы каждой размерности
+                for (int i = 0; i < indices.Length; i++)
+                {
+                    if (indices[i] < 0 || indices[i] >= _shape[i])
+                        throw new ArgumentException("Индексы выходят за пределы массива.");
+                }
+
                 int flatIndex = GetFlatIndex(indices);
                 return this[flatIndex];
             }
@@ -79,6 +86,13 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             {
                 if (indices.Length != _shape.Length)
                     throw new ArgumentException("Количество индексов не соответствует рангу тензора.");
+
+                // Проверяем, что индексы не выходят за пределы каждой размерности
+                for (int i = 0; i < indices.Length; i++)
+                {
+                    if (indices[i] < 0 || indices[i] >= _shape[i])
+                        throw new ArgumentException("Индексы выходят за пределы массива.");
+                }
 
                 int flatIndex = GetFlatIndex(indices);
                 this[flatIndex] = value;
