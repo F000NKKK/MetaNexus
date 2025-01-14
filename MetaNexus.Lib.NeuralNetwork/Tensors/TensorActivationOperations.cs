@@ -27,7 +27,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
 
         Tensor ITensorActivationOperations.ApplySoftmax()
         {
-            var expValues = _data.Select(x => MathF.Exp(x));
+            var expValues = _data.Span.ToArray().Select(x => MathF.Exp(x));
             float sum = expValues.Sum();
             return new Tensor(_shape, expValues.Select(x => x / sum).ToArray());
         }

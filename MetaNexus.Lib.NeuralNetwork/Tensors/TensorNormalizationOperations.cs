@@ -10,13 +10,13 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             float mean = 0;
             float variance = 0;
 
-            foreach (var value in _data)
+            foreach (var value in _data.Span.ToArray())
             {
                 mean += value;
             }
             mean /= Size;
 
-            foreach (var value in _data)
+            foreach (var value in _data.Span.ToArray())
             {
                 variance += (value - mean) * (value - mean);
             }
@@ -26,7 +26,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             var result = new Tensor(_shape);
             for (int i = 0; i < Size; i++)
             {
-                result._data[i] = (this._data[i] - mean) / stdDev;
+                result._data.Span.ToArray()[i] = (this._data.Span.ToArray()[i] - mean) / stdDev;
             }
 
             return result;
@@ -40,17 +40,17 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             var result = new Tensor(_shape);
             for (int i = 0; i < Size; i++)
             {
-                result._data[i] = (this._data[i] - mean._data[i]) / (float)Math.Sqrt(variance._data[i] + 1e-8f);
+                result._data.Span.ToArray()[i] = (this._data.Span.ToArray()[i] - mean._data.Span.ToArray()[i]) / (float)Math.Sqrt(variance._data.Span.ToArray()[i] + 1e-8f);
             }
             return result;
         }
 
         public Tensor MinMaxNormalize()
         {
-            float min = _data[0];
-            float max = _data[0];
+            float min = _data.Span.ToArray()[0];
+            float max = _data.Span.ToArray()[0];
 
-            foreach (var value in _data)
+            foreach (var value in _data.Span.ToArray())
             {
                 if (value < min) min = value;
                 if (value > max) max = value;
@@ -59,7 +59,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             var result = new Tensor(_shape);
             for (int i = 0; i < Size; i++)
             {
-                result._data[i] = (_data[i] - min) / (max - min);
+                result._data.Span.ToArray()[i] = (_data.Span.ToArray()[i] - min) / (max - min);
             }
 
             return result;
@@ -73,7 +73,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             var result = new Tensor(_shape);
             for (int i = 0; i < Size; i++)
             {
-                result._data[i] = (this._data[i] - mean._data[i]) / (float)Math.Sqrt(variance._data[i] + 1e-8f);
+                result._data.Span.ToArray()[i] = (this._data.Span.ToArray()[i] - mean._data.Span.ToArray()[i]) / (float)Math.Sqrt(variance._data.Span.ToArray()[i] + 1e-8f);
             }
             return result;
         }
@@ -83,13 +83,13 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             float mean = 0;
             float variance = 0;
 
-            foreach (var value in _data)
+            foreach (var value in _data.Span.ToArray())
             {
                 mean += value;
             }
             mean /= Size;
 
-            foreach (var value in _data)
+            foreach (var value in _data.Span.ToArray())
             {
                 variance += (value - mean) * (value - mean);
             }
@@ -99,7 +99,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             var result = new Tensor(_shape);
             for (int i = 0; i < Size; i++)
             {
-                result._data[i] = (this._data[i] - mean) / stdDev;
+                result._data.Span.ToArray()[i] = (this._data.Span.ToArray()[i] - mean) / stdDev;
             }
 
             return result;
@@ -110,7 +110,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             var result = new Tensor(_shape);
             for (int i = 0; i < Size; i++)
             {
-                result._data[i] = this._data[i] / numClasses;
+                result._data.Span.ToArray()[i] = this._data.Span.ToArray()[i] / numClasses;
             }
 
             return result;

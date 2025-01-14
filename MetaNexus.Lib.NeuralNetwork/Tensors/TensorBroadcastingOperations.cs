@@ -108,7 +108,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                     multiplier *= sourceShape[i];
                 }
 
-                expandedData[targetIndex] = _data[sourceIndex];
+                expandedData[targetIndex] = _data.Span.ToArray()[sourceIndex];
             }
 
             return new Tensor(targetShape, expandedData);

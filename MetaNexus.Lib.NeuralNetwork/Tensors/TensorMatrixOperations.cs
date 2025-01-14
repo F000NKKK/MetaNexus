@@ -25,9 +25,9 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                     float sum = 0;
                     for (int k = 0; k < commonDim; k++)
                     {
-                        sum += _data[i * commonDim + k] * other._data[k * cols + j];
+                        sum += _data.Span.ToArray()[i * commonDim + k] * other._data.Span.ToArray()[k * cols + j];
                     }
-                    result._data[i * cols + j] = sum;
+                    result._data.Span.ToArray()[i * cols + j] = sum;
                 }
             }
 
@@ -48,7 +48,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             if (_shape[0] != _shape[1])
                 throw new InvalidOperationException("Детерминант можно вычислить только для квадратных матриц.");
 
-            return CalculateDeterminant(_data, _shape[0]);
+            return CalculateDeterminant(_data.Span.ToArray(), _shape[0]);
         }
 
         public Tensor Inverse()
@@ -56,7 +56,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             if (_shape[0] != _shape[1])
                 throw new InvalidOperationException("Обратную матрицу можно вычислить только для квадратных матриц.");
 
-            return CalculateInverse(_data, _shape[0]);
+            return CalculateInverse(_data.Span.ToArray(), _shape[0]);
         }
 
         private float CalculateDeterminant(float[] matrixData, int n)

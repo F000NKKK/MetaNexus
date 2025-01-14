@@ -8,7 +8,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
     /// </summary>
     public partial struct Tensor : ITensor
     {
-        private float[] _data;
+        private Memory<float> _data;
         private int[] _shape;
 
         /// <summary>
@@ -29,9 +29,8 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 }
             }
             Size = (int)tempSize;
-            _data = new float[Size];
+            _data = new Memory<float>(new float[Size]); // Используем Memory вместо массива
         }
-
 
         /// <summary>
         /// Конструктор для создания многомерного тензора с заданной формой и исходными данными.
@@ -46,7 +45,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             {
                 Size *= dim;
             }
-            _data = data ?? throw new ArgumentNullException(nameof(data));
+            _data = new Memory<float>(data ?? throw new ArgumentNullException(nameof(data)));
             if (data.Length != Size)
             {
                 throw new ArgumentException("Размер массива данных не соответствует размеру тензора.");
@@ -61,8 +60,8 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
         {
             _shape = existingTensor._shape;
             Size = existingTensor.Size;
-            _data = new float[Size];
-            Array.Copy(existingTensor._data, _data, Size);
+            _data = new Memory<float>(new float[Size]);
+            existingTensor._data.Span.CopyTo(_data.Span); // Копирование данных через Span
         }
 
         public float this[params int[] indices]
@@ -80,7 +79,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 }
 
                 int flatIndex = GetFlatIndex(indices);
-                return this[flatIndex];
+                return _data.Span[flatIndex];  // Чтение через Span
             }
             set
             {
@@ -95,7 +94,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 }
 
                 int flatIndex = GetFlatIndex(indices);
-                this[flatIndex] = value;
+                _data.Span[flatIndex] = value;  // Запись через Span
             }
         }
 
@@ -103,15 +102,16 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
         {
             get
             {
-                return _data[indice];
+                return _data.Span[indice];  // Доступ через Span
             }
             set
             {
-                _data[indice] = value;
+                _data.Span[indice] = value;  // Запись через Span
             }
         }
 
-        public float[] Data => _data;
+        public float[] Data => _data.Span.ToArray();  // Если нужно вернуть данные как обычный массив
+
         public int[] Shape => _shape;
 
         public int Rank => _shape.Length;
@@ -123,7 +123,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             var result = new Tensor(_shape);
             for (int i = 0; i < Size; i++)
             {
-                result._data[i] = func(_data[i]);
+                result._data.Span[i] = func(_data.Span[i]);
             }
             return result;
         }
@@ -131,18 +131,19 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
         public Tensor Clone()
         {
             var clone = new Tensor(_shape);
-            Array.Copy(_data, clone._data, Size);
+            _data.Span.CopyTo(clone._data.Span);  // Копирование через Span
             return clone;
         }
 
         public float[] FlattenFloatArray()
         {
-            return (float[])_data.Clone();
+            return _data.Span.ToArray();  // Если нужно вернуть данные как обычный массив
         }
+
         public Tensor Flatten()
         {
             // Создаем новый тензор с одномерным массивом
-            return new Tensor(new int[] { Size }, _data);
+            return new Tensor(new int[] { Size }, _data.Span.ToArray());
         }
 
         public bool IsEmpty()

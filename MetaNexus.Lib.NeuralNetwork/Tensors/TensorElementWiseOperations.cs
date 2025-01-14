@@ -12,7 +12,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             Tensor result = new Tensor(Shape);
             for (int i = 0; i < Size; i++)
             {
-                result._data[i] = operation(_data[i], other._data[i]);
+                result._data.Span.ToArray()[i] = operation(_data.Span.ToArray()[i], other._data.Span.ToArray()[i]);
             }
             return result;
         }
@@ -22,7 +22,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             Tensor result = new Tensor(Shape);
             for (int i = 0; i < Size; i++)
             {
-                result._data[i] = operation(_data[i], scalar);
+                result._data.Span.ToArray()[i] = operation(_data.Span.ToArray()[i], scalar);
             }
             return result;
         }

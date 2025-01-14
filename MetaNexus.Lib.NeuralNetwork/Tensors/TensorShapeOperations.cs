@@ -38,7 +38,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 throw new InvalidOperationException("Новая форма должна содержать такое же количество элементов, как и старая.");
 
             var result = new Tensor(newShape);
-            Array.Copy(_data, result._data, Size);
+            Array.Copy(_data.Span.ToArray(), result._data.Span.ToArray(), Size);
             return result;
         }
 
@@ -102,7 +102,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             {
                 indices = GetIndicesFromFlatIndex(i);
                 flatIndex = GetFlatIndexFromNewOrder(indices, newOrder);
-                result._data[flatIndex] = tensor._data[i];
+                result._data.Span.ToArray()[flatIndex] = tensor._data.Span.ToArray()[i];
             }
 
             return result;
