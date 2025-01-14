@@ -1,7 +1,5 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions;
 using MetaNexus.Lib.NeuralNetwork.Tensors;
-using System;
-using System.Drawing;
 
 public class DenseLayer : Layer
 {
@@ -32,6 +30,7 @@ public class DenseLayer : Layer
     /// <returns>Выходной тензор после прохождения через слой.</returns>
     public override Tensor Forward(Tensor input)
     {
+        this.input = input; // Сохраняем вход для использования в Backward
         // Применение нормализации (если необходимо)
         input = input.Normalize();  // Поясните, нужно ли это на уровне слоя
 

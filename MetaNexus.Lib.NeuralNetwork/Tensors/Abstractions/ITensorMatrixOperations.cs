@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="other">Другой тензор для матричного умножения.</param>
         /// <returns>Результат матричного умножения.</returns>
-        Tensor MatrixMultiply(Tensor other);
+        Tensor Dot(Tensor other);
 
         /// <summary>
         /// Матричное деление (аналогично умножению на обратную матрицу).

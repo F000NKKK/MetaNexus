@@ -122,5 +122,30 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             }
             return index;
         }
+
+        private int[] GetIndicesFromFlatIndex(int flatIndex)
+        {
+            int[] indices = new int[Rank];
+            for (int i = Rank - 1; i >= 0; i--)
+            {
+                indices[i] = flatIndex % Shape[i];
+                flatIndex /= Shape[i];
+            }
+            return indices;
+        }
+
+        private int GetFlatIndexFromNewOrder(int[] indices, int[] newOrder)
+        {
+            int flatIndex = 0;
+            int multiplier = 1;
+
+            for (int i = _shape.Length - 1; i >= 0; i--)
+            {
+                flatIndex += indices[newOrder[i]] * multiplier;
+                multiplier *= _shape[newOrder[i]];
+            }
+
+            return flatIndex;
+        }
     }
 }

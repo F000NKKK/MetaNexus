@@ -4,7 +4,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
 {
     public partial struct Tensor : ITensorMatrixOperations
     {
-        public Tensor MatrixMultiply(Tensor other)
+        public Tensor Dot(Tensor other)
         {
             if (_shape.Length != 2 || other._shape.Length != 2)
                 throw new InvalidOperationException("Для матричного умножения тензоры должны быть двухмерными.");
@@ -40,7 +40,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 throw new InvalidOperationException("Для матричного деления вторая матрица должна быть квадратной.");
 
             Tensor inverseOther = other.Inverse();
-            return this.MatrixMultiply(inverseOther);
+            return this.Dot(inverseOther);
         }
 
         public float Determinant()

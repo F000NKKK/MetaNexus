@@ -100,6 +100,22 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
 
         public abstract Tensor Forward(Tensor input);
 
+        public Tensor Backward(Tensor delta, float learningRate)
+        {
+            // 1. Градиенты для весов и смещений
+            Tensor weightGradient = input.Transpose().Dot(delta); // dE/dW
+            Tensor biasGradient = delta.Sum(axis: 0);              // dE/db
+
+            // 2. Обновление весов и смещений
+            weights -= weightGradient * learningRate;             // W = W - η * dE/dW
+            biases -= biasGradient * learningRate;                // b = b - η * dE/db
+
+            // 3. Градиенты для предыдущего слоя
+            Tensor previousDelta = delta.Dot(weights.Transpose()); // dE/dInput
+
+            return previousDelta;
+        }
+
         /// <summary>
         /// Тензор смещений для слоя.
         /// </summary>
@@ -109,6 +125,11 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
         /// Тензор весов для слоя.
         /// </summary>
         public Tensor weights;
+
+        /// <summary>
+        /// Тензор ввода для обратного хода
+        /// </summary>
+        public Tensor input;
 
         /// <summary>
         /// Размер слоя (количество нейронов в слое).

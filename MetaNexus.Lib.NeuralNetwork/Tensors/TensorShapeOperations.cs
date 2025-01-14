@@ -98,36 +98,12 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
 
             for (int i = 0; i < Size; i++)
             {
-                GetIndicesFromFlatIndex(i, indices);
+                indices = GetIndicesFromFlatIndex(i);
                 flatIndex = GetFlatIndexFromNewOrder(indices, newOrder);
                 result._data[flatIndex] = tensor._data[i];
             }
 
             return result;
-        }
-
-        private void GetIndicesFromFlatIndex(int flatIndex, int[] indices)
-        {
-            int remainingIndex = flatIndex;
-            for (int i = _shape.Length - 1; i >= 0; i--)
-            {
-                indices[i] = remainingIndex % _shape[i];
-                remainingIndex /= _shape[i];
-            }
-        }
-
-        private int GetFlatIndexFromNewOrder(int[] indices, int[] newOrder)
-        {
-            int flatIndex = 0;
-            int multiplier = 1;
-
-            for (int i = _shape.Length - 1; i >= 0; i--)
-            {
-                flatIndex += indices[newOrder[i]] * multiplier;
-                multiplier *= _shape[newOrder[i]];
-            }
-
-            return flatIndex;
         }
     }
 }

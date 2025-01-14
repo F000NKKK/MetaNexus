@@ -6,7 +6,7 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
     /// Интерфейс для слоя нейронной сети. Он включает методы для получения и установки весов и смещений,
     /// а также для выполнения прямого прохода и инициализации весов и смещений.
     /// </summary>
-    public interface ILayer
+    public interface ILayer : IBackpropLayer
     {
         /// <summary>
         /// Получить тензор весов.

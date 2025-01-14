@@ -1,9 +1,6 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.ML.Abstractions;
-using MetaNexus.Lib.NeuralNetwork.ML.Layers;
 using MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions;
 using MetaNexus.Lib.NeuralNetwork.Tensors;
-using System;
-using System.Collections.Generic;
 
 public class NeuralNetwork : INetwork
 {
