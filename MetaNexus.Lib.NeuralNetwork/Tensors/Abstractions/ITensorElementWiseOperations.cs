@@ -14,7 +14,7 @@
         /// <param name="other">Другой тензор, с которым будет выполнена операция.</param>
         /// <param name="operation">Функция, описывающая операцию, которая будет применена к каждому элементу.</param>
         /// <returns>Новый тензор, результат выполнения операции.</returns>
-        Tensor ElementWiseOperation(Tensor other, Func<float, float, float> operation);
+        Tensor ElementWiseOperation(ITensor other, Func<float, float, float> operation);
 
         /// <summary>
         /// Выполняет поэлементную операцию между текущим тензором и скаляром.
