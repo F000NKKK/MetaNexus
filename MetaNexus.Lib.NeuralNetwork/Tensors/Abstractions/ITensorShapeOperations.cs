@@ -3,7 +3,7 @@
     /// <summary>
     /// Интерфейс для изменения формы и трансформации тензоров.
     /// </summary>
-    internal interface ITensorShapeOperations
+    public interface ITensorShapeOperations
     {
         /// <summary>
         /// Транспонирование тензора (для матриц).

@@ -3,7 +3,7 @@
     /// <summary>
     /// Интерфейс для выполнения агрегационных операций с тензорами.
     /// </summary>
-    internal interface ITensorAggregationOperations
+    public interface ITensorAggregationOperations
     {
         /// <summary>
         /// Вычисление суммы всех элементов тензора.

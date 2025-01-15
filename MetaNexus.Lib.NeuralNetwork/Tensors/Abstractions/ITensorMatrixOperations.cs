@@ -3,7 +3,7 @@
     /// <summary>
     /// Интерфейс для выполнения матричных операций с тензорами.
     /// </summary>
-    internal interface ITensorMatrixOperations
+    public interface ITensorMatrixOperations
     {
         /// <summary>
         /// Матричное умножение двух тензоров.

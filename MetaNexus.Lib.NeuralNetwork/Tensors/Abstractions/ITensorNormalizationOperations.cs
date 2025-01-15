@@ -3,7 +3,7 @@
     /// <summary>
     /// Интерфейс для нормализации тензоров.
     /// </summary>
-    internal interface ITensorNormalizationOperations
+    public interface ITensorNormalizationOperations
     {
         /// <summary>
         /// Нормализация значений тензора (например, для подготовки данных).

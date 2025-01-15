@@ -3,12 +3,13 @@
     /// <summary>
     /// Интерфейс, который объединяет все операции с тензорами.
     /// </summary>
-    internal interface ITensorOperations
+    public interface ITensorOperations
         : ITensorArithmeticOperations,
           ITensorElementWiseOperations,
           ITensorShapeOperations,
           ITensorAggregationOperations,
           ITensorActivationOperations,
+          ITensorActivationOperationsPrime,
           ITensorNormalizationOperations,
           ITensorMatrixOperations
     {

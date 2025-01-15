@@ -5,7 +5,7 @@
     /// Позволяет реализовать операции, такие как сложение, вычитание, умножение и деление,
     /// между тензорами или между тензором и скаляром.
     /// </summary>
-    internal interface ITensorElementWiseOperations
+    public interface ITensorElementWiseOperations
     {
         /// <summary>
         /// Выполняет поэлементную операцию между текущим тензором и другим тензором.

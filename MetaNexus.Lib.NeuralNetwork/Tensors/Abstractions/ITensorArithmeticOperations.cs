@@ -3,7 +3,7 @@
     /// <summary>
     /// Интерфейс для выполнения базовых арифметических операций с тензорами.
     /// </summary>
-    internal interface ITensorArithmeticOperations
+    public interface ITensorArithmeticOperations
     {
         /// <summary>
         /// Сложение двух тензоров.

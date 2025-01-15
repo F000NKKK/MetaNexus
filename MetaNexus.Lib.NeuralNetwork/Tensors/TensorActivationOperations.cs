@@ -153,122 +153,122 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
         }
 
         // Статические версии функций активации
-        public static Tensor ApplySoftSignStatic(Tensor tensor)
+        public static Tensor ApplySoftSignStatic(ITensor tensor)
         {
             return ((ITensorActivationOperations)tensor).ApplySoftSign();
         }
-        public static Tensor ApplyIdentityStatic(Tensor tensor)
+        public static Tensor ApplyIdentityStatic(ITensor tensor)
         {
             return ((ITensorActivationOperations)tensor).ApplyIdentity();
         }
 
-        public static Tensor ApplySigmoidStatic(Tensor tensor)
+        public static Tensor ApplySigmoidStatic(ITensor tensor)
         {
             return ((ITensorActivationOperations)tensor).ApplySigmoid();
         }
 
-        public static Tensor ApplyTanhStatic(Tensor tensor)
+        public static Tensor ApplyTanhStatic(ITensor tensor)
         {
             return ((ITensorActivationOperations)tensor).ApplyTanh();
         }
 
-        public static Tensor ApplyReLUStatic(Tensor tensor)
+        public static Tensor ApplyReLUStatic(ITensor tensor)
         {
             return ((ITensorActivationOperations)tensor).ApplyReLU();
         }
 
-        public static Tensor ApplyLeakyReLUStatic(Tensor tensor, float alpha)
+        public static Tensor ApplyLeakyReLUStatic(ITensor tensor, float alpha)
         {
             return ((ITensorActivationOperations)tensor).ApplyLeakyReLU(alpha);
         }
 
-        public static Tensor ApplySoftplusStatic(Tensor tensor)
+        public static Tensor ApplySoftplusStatic(ITensor tensor)
         {
             return ((ITensorActivationOperations)tensor).ApplySoftplus();
         }
 
-        public static Tensor ApplySwishStatic(Tensor tensor)
+        public static Tensor ApplySwishStatic(ITensor tensor)
         {
             return ((ITensorActivationOperations)tensor).ApplySwish();
         }
 
-        public static Tensor ApplyELUStatic(Tensor tensor, float alpha)
+        public static Tensor ApplyELUStatic(ITensor tensor, float alpha)
         {
             return ((ITensorActivationOperations)tensor).ApplyELU(alpha);
         }
 
-        public static Tensor ApplySoftmaxStatic(Tensor tensor)
+        public static Tensor ApplySoftmaxStatic(ITensor tensor)
         {
             return ((ITensorActivationOperations)tensor).ApplySoftmax();
         }
 
-        public static Tensor ApplyHardSigmoidStatic(Tensor tensor)
+        public static Tensor ApplyHardSigmoidStatic(ITensor tensor)
         {
             return ((ITensorActivationOperations)tensor).ApplyHardSigmoid();
         }
 
-        public static Tensor ApplyGELUStatic(Tensor tensor)
+        public static Tensor ApplyGELUStatic(ITensor tensor)
         {
             return ((ITensorActivationOperations)tensor).ApplyGELU();
         }
 
-        public static Tensor ApplyHardTanhStatic(Tensor tensor)
+        public static Tensor ApplyHardTanhStatic(ITensor tensor)
         {
             return ((ITensorActivationOperations)tensor).ApplyHardTanh();
         }
 
-        public static Tensor ApplyMishStatic(Tensor tensor)
+        public static Tensor ApplyMishStatic(ITensor tensor)
         {
             return ((ITensorActivationOperations)tensor).ApplyMish();
         }
 
         // Статические версии производных функций активации
-        public static Tensor ApplySigmoidPrimeStatic(Tensor tensor)
+        public static Tensor ApplySigmoidPrimeStatic(ITensor tensor)
         {
             return ((ITensorActivationOperationsPrime)tensor).ApplySigmoidPrime();
         }
 
-        public static Tensor ApplyTanhPrimeStatic(Tensor tensor)
+        public static Tensor ApplyTanhPrimeStatic(ITensor tensor)
         {
             return ((ITensorActivationOperationsPrime)tensor).ApplyTanhPrime();
         }
 
-        public static Tensor ApplyReLUPrimeStatic(Tensor tensor)
+        public static Tensor ApplyReLUPrimeStatic(ITensor tensor)
         {
             return ((ITensorActivationOperationsPrime)tensor).ApplyReLUPrime();
         }
 
-        public static Tensor ApplyLeakyReLUPrimeStatic(Tensor tensor, float alpha)
+        public static Tensor ApplyLeakyReLUPrimeStatic(ITensor tensor, float alpha)
         {
             return ((ITensorActivationOperationsPrime)tensor).ApplyLeakyReLUPrime(alpha);
         }
 
-        public static Tensor ApplySoftplusPrimeStatic(Tensor tensor)
+        public static Tensor ApplySoftplusPrimeStatic(ITensor tensor)
         {
             return ((ITensorActivationOperationsPrime)tensor).ApplySoftplusPrime();
         }
 
-        public static Tensor ApplySwishPrimeStatic(Tensor tensor)
+        public static Tensor ApplySwishPrimeStatic(ITensor tensor)
         {
             return ((ITensorActivationOperationsPrime)tensor).ApplySwishPrime();
         }
 
-        public static Tensor ApplyGELUPrimeStatic(Tensor tensor)
+        public static Tensor ApplyGELUPrimeStatic(ITensor tensor)
         {
             return ((ITensorActivationOperationsPrime)tensor).ApplyGELUPrime();
         }
 
-        public static Tensor ApplyHardSigmoidPrimeStatic(Tensor tensor)
+        public static Tensor ApplyHardSigmoidPrimeStatic(ITensor tensor)
         {
             return ((ITensorActivationOperationsPrime)tensor).ApplyHardSigmoidPrime();
         }
 
-        public static Tensor ApplyHardTanhPrimeStatic(Tensor tensor)
+        public static Tensor ApplyHardTanhPrimeStatic(ITensor tensor)
         {
             return ((ITensorActivationOperationsPrime)tensor).ApplyHardTanhPrime();
         }
 
-        public static Tensor ApplyMishPrimeStatic(Tensor tensor)
+        public static Tensor ApplyMishPrimeStatic(ITensor tensor)
         {
             return ((ITensorActivationOperationsPrime)tensor).ApplyMishPrime();
         }

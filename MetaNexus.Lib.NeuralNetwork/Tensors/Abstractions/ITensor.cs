@@ -4,7 +4,7 @@
     /// Интерфейс для работы с тензорами, поддерживающий доступ к данным,
     /// а также выполнение различных операций над тензорами.
     /// </summary>
-    internal interface ITensor : ITensorOperations
+    public interface ITensor : ITensorOperations
     {
         /// <summary>
         /// Индексатор для доступа к элементам тензора по заданным индексам.

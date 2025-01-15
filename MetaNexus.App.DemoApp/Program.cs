@@ -1,7 +1,4 @@
-﻿using MetaNexus.Lib.NeuralNetwork.ML.Layers;
-using MetaNexus.Lib.NeuralNetwork.Tensors;
-using System;
-using System.Collections.Generic;
+﻿using MetaNexus.Lib.NeuralNetwork.Tensors;
 
 namespace SimpleNeuralNetwork
 {

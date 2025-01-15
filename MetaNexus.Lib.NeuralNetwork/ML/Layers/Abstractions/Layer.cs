@@ -1,4 +1,5 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensors;
+using MetaNexus.Lib.NeuralNetwork.Tensors.Abstractions;
 
 namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
 {
@@ -235,14 +236,14 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
         /// </summary>
         /// <param name="input">Входной тензор.</param>
         /// <returns>Результат применения функции активации.</returns>
-        public delegate Tensor ActivationFunc(Tensor input);
+        public delegate Tensor ActivationFunc(ITensor input);
 
         /// <summary>
         /// Делегат, представляющий производную функции активации.
         /// </summary>
         /// <param name="input">Входной тензор.</param>
         /// <returns>Результат применения производной функции активации.</returns>
-        public delegate Tensor ActivationPrimeFunc(Tensor input);
+        public delegate Tensor ActivationPrimeFunc(ITensor input);
 
         /// <summary>
         /// Функция активации для слоя.
@@ -271,12 +272,12 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
         /// <summary>
         /// Функция активации по умолчанию (ReLU).
         /// </summary>
-        private static Tensor DefaultActivation(Tensor input) => ((Tensors.Abstractions.ITensorActivationOperations)input).ApplyReLU();
+        private static Tensor DefaultActivation(ITensor input) => ((Tensors.Abstractions.ITensorActivationOperations)input).ApplyReLU();
 
         /// <summary>
         /// Производная функции активации по умолчанию (ReLU').
         /// </summary>
-        private static Tensor DefaultActivationPrime(Tensor input) => ((Tensors.Abstractions.ITensorActivationOperationsPrime)input).ApplyReLUPrime();
+        private static Tensor DefaultActivationPrime(ITensor input) => ((Tensors.Abstractions.ITensorActivationOperationsPrime)input).ApplyReLUPrime();
 
 
         /// <summary>

@@ -3,7 +3,7 @@
     /// <summary>
     /// Интерфейс для применения производных функций активации к тензорам.
     /// </summary>
-    internal interface ITensorActivationOperationsPrime
+    public interface ITensorActivationOperationsPrime
     {
         /// <summary>
         /// Применение производной от функции активации Sigmoid к тензору.

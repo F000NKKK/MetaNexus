@@ -3,7 +3,7 @@
     /// <summary>
     /// Интерфейс для применения функций активации к тензорам.
     /// </summary>
-    internal interface ITensorActivationOperations
+    public interface ITensorActivationOperations
     {
         /// <summary>
         /// Применение функции активации ReLU (Rectified Linear Unit) к тензору.
