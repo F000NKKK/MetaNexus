@@ -133,14 +133,18 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
 
         Tensor ITensorActivationOperationsPrime.ApplyMishPrime()
         {
-            return Apply(x =>
             {
-                float sp = 1f / (1f + MathF.Exp(-x));
-                float omega = 4f * (x + 1f) + 4f * MathF.Exp(2f * x) + MathF.Exp(3f * x) + MathF.Exp(x) * (4f * x + 6f);
-                float delta = 2f * MathF.Exp(x) + MathF.Exp(2f * x) + 2f;
-                return sp + sp * (1f - sp) * omega / (delta * delta);
-            });
+                return Apply(x =>
+                {
+                    float sp = 1f / (1f + MathF.Exp(-x));
+                    float omega = 4f * (x + 1f) + 4f * MathF.Exp(2f * x) + MathF.Exp(3f * x) + MathF.Exp(x) * (4f * x + 6f);
+                    float delta = 2f * MathF.Exp(x) + MathF.Exp(2f * x) + 2f;
+
+                    return sp + sp * (1f - sp) * omega / (delta * delta);
+                });
+            }
         }
+
 
         Tensor ITensorActivationOperations.ApplyIdentity()
         {

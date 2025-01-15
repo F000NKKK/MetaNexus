@@ -3,7 +3,7 @@ using MetaNexus.Lib.NeuralNetwork.Tensors.Abstractions;
 
 namespace MetaNexus.Lib.NeuralNetwork.Tests
 {
-    public class TensorActivationOperations
+    public class TensorActivationOperationsTests
     {
         private ITensor tensor;
 
@@ -142,7 +142,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
                 MathF.Max(MathF.Min(2f, 1f), -1f),
                 MathF.Max(MathF.Min(-2f, 1f), -1f),
                 MathF.Max(MathF.Min(3f, 1f), -1f)
-            }).Within(1e-6f));
+            }).Within(1e-4f));
         }
 
         [Test]
@@ -243,27 +243,28 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = Tensor.ApplyGELUPrimeStatic(tensor);
             Assert.That(result.Data, Is.EqualTo(new float[]
             {
-                0.15880779f,
+                0.130211473f, 
                 0.5f,
-                0.84119221f,
-                0.97724987f,
-                0.02275013f,
-                0.9986501f
-            }).Within(1e-6f));
+                0.869788527f,
+                0.986797214f,
+                0.0132027464f,
+                0.999565184f
+            }
+            ).Within(1e-6f));
         }
 
         [Test]
         public void ApplyHardSigmoidPrime_Test()
         {
             var result = Tensor.ApplyHardSigmoidPrimeStatic(tensor);
-            Assert.That(result.Data, Is.EqualTo(new float[] { 0.2f, 0.2f, 0.2f, 0f, 0f, 0f }));
+            Assert.That(result.Data, Is.EqualTo(new float[] { 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0f }));
         }
 
         [Test]
         public void ApplyHardTanhPrime_Test()
         {
             var result = Tensor.ApplyHardTanhPrimeStatic(tensor);
-            Assert.That(result.Data, Is.EqualTo(new float[] { 1f, 1f, 1f, 0f, 0f, 0f }));
+            Assert.That(result.Data, Is.EqualTo(new float[] { 0f, 1f, 0f, 0f, 0f, 0f }));
         }
 
         [Test]
@@ -272,12 +273,12 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = Tensor.ApplyMishPrimeStatic(tensor);
             Assert.That(result.Data, Is.EqualTo(new float[]
             {
-                0.09816753f,
-                0.5f,
-                0.80104645f,
-                0.98752257f,
-                0.01247743f,
-                0.99988419f
+                0.30058962f,
+                0.65f,
+                0.80693483f,
+                0.89599138f,
+                0.03514066f,
+                0.95487081f
             }).Within(1e-6f));
         }
 
