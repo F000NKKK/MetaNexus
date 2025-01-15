@@ -1,5 +1,7 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensors.Abstractions;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("MetaNexus.Lib.NeuralNetwork.Tests")]
 namespace MetaNexus.Lib.NeuralNetwork.Tensors
 {
     public partial struct Tensor : ITensorActivationOperations, ITensorActivationOperationsPrime
