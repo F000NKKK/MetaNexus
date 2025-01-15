@@ -11,57 +11,49 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
         private Memory<float> _data;
         private int[] _shape;
 
-        /// <summary>
-        /// Конструктор для создания многомерного тензора с заданной формой.
-        /// Создает тензор с заданными размерами для каждого измерения.
-        /// </summary>
-        /// <param name="shape">Массив, представляющий форму тензора (размерности для каждого измерения).</param>
         public Tensor(int[] shape)
         {
             _shape = shape ?? throw new ArgumentNullException(nameof(shape));
+
             long tempSize = 1L;
             foreach (var dim in shape)
             {
                 tempSize *= dim;
-                if (tempSize > int.MaxValue) // Проверяем, чтобы размер не превышал int.MaxValue
+                if (tempSize > int.MaxValue)  // Проверка на слишком большой размер
                 {
                     throw new InvalidOperationException("Размер тензора слишком велик для использования в качестве массива.");
                 }
             }
+
             Size = (int)tempSize;
-            _data = new Memory<float>(new float[Size]); // Используем Memory вместо массива
+            _data = new Memory<float>(new float[Size]);
         }
 
-        /// <summary>
-        /// Конструктор для создания многомерного тензора с заданной формой и исходными данными.
-        /// </summary>
-        /// <param name="shape">Массив, представляющий форму тензора (размерности для каждого измерения).</param>
-        /// <param name="data">Массив данных, заполняющий тензор.</param>
         public Tensor(int[] shape, float[] data)
         {
             _shape = shape ?? throw new ArgumentNullException(nameof(shape));
+
             Size = 1;
             foreach (var dim in shape)
             {
                 Size *= dim;
             }
-            _data = new Memory<float>(data ?? throw new ArgumentNullException(nameof(data)));
+
+            if (data == null) throw new ArgumentNullException(nameof(data));
             if (data.Length != Size)
             {
                 throw new ArgumentException("Размер массива данных не соответствует размеру тензора.");
             }
+
+            _data = new Memory<float>(data);
         }
 
-        /// <summary>
-        /// Конструктор для создания нового тензора на основе существующего тензора (глубокое копирование).
-        /// </summary>
-        /// <param name="existingTensor">Существующий тензор, данные которого будут скопированы в новый.</param>
         public Tensor(Tensor existingTensor)
         {
             _shape = existingTensor._shape;
             Size = existingTensor.Size;
             _data = new Memory<float>(new float[Size]);
-            existingTensor._data.Span.CopyTo(_data.Span); // Копирование данных через Span
+            existingTensor._data.Span.CopyTo(_data.Span);
         }
 
         public float this[params int[] indices]
@@ -71,7 +63,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 if (indices.Length != _shape.Length)
                     throw new ArgumentException("Количество индексов не соответствует рангу тензора.");
 
-                // Проверяем, что индексы не выходят за пределы каждой размерности
                 for (int i = 0; i < indices.Length; i++)
                 {
                     if (indices[i] < 0 || indices[i] >= _shape[i])
@@ -79,14 +70,14 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 }
 
                 int flatIndex = GetFlatIndex(indices);
-                return this[flatIndex];  // Чтение через Span
+                return _data.Span[flatIndex];  // Доступ через Span
             }
             set
             {
                 if (indices.Length != _shape.Length)
                     throw new ArgumentException("Количество индексов не соответствует рангу тензора.");
 
-                // Проверяем, что индексы не выходят за пределы каждой размерности
+
                 for (int i = 0; i < indices.Length; i++)
                 {
                     if (indices[i] < 0 || indices[i] >= _shape[i])
@@ -94,24 +85,38 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 }
 
                 int flatIndex = GetFlatIndex(indices);
-                this[flatIndex] = value;  // Запись через Span
+                _data.Span[flatIndex] = value;
             }
         }
 
+        private int GetFlatIndex(int[] indices)
+        {
+            int flatIndex = 0;
+            for (int i = 0; i < indices.Length; i++)
+            {
+                int stride = 1;
+                for (int j = i + 1; j < indices.Length; j++)
+                {
+                    stride *= _shape[j];
+                }
+                flatIndex += indices[i] * stride;
+            }
+            return flatIndex;
+        }
 
         private float this[int indice]
         {
             get
             {
-                return _data.Span[indice];  // Доступ через Span
+                return _data.Span[indice];
             }
             set
             {
-                _data.Span[indice] = value;  // Запись через Span
+                _data.Span[indice] = value;
             }
         }
 
-        public float[] Data => _data.Span.ToArray();  // Если нужно вернуть данные как обычный массив
+        public float[] Data => _data.Span.ToArray();
 
         public int[] Shape => _shape;
 
@@ -152,26 +157,26 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             return Size == 0;
         }
 
-        private int GetFlatIndex(int[] indices)
-        {
-            int index = 0;
-            int multiplier = 1;
-            for (int i = _shape.Length - 1; i >= 0; i--)
-            {
-                index += indices[i] * multiplier;
-                multiplier *= _shape[i];
-            }
-            return index;
-        }
-
+        /// <summary>
+        /// Преобразует плоский индекс в многомерный индекс, соответствующий форме тензора.
+        /// </summary>
+        /// <param name="flatIndex">Плоский индекс (индекс элемента в одномерном массиве, который соответствует многомерному тензору).</param>
+        /// <returns>Массив индексов, соответствующих многомерному положению элемента.</returns>
         private int[] GetIndicesFromFlatIndex(int flatIndex)
         {
+            // Массив для хранения индексов для каждого измерения
             int[] indices = new int[Rank];
-            for (int i = Rank - 1; i >= 0; i--)
+
+            // Преобразуем плоский индекс в многомерный, начиная с первой оси
+            for (int i = 0; i < Rank; i++)
             {
+                // Определяем индекс для текущего измерения
                 indices[i] = flatIndex % Shape[i];
+
+                // Снижаем плоский индекс для следующего измерения
                 flatIndex /= Shape[i];
             }
+
             return indices;
         }
 
