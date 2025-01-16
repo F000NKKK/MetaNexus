@@ -1,7 +1,7 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensors;
 using MetaNexus.Lib.NeuralNetwork.Tensors.Abstractions;
 
-namespace MetaNexus.Lib.NeuralNetwork.Tests
+namespace MetaNexus.Lib.NeuralNetwork.Tests.Tensors
 {
     public class TensorActivationOperationsTests
     {
@@ -243,7 +243,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = Tensor.ApplyGELUPrimeStatic(tensor);
             Assert.That(result.Data.Span.ToArray(), Is.EqualTo(new float[]
             {
-                0.130211473f, 
+                0.130211473f,
                 0.5f,
                 0.869788527f,
                 0.986797214f,

@@ -1,7 +1,6 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensors;
-using NUnit.Framework;
 
-namespace MetaNexus.Lib.NeuralNetwork.Tests
+namespace MetaNexus.Lib.NeuralNetwork.Tests.Tensors
 {
     public class TensorNormalizationOperationsTests
     {

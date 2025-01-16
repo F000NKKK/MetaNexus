@@ -1,9 +1,7 @@
-﻿using NUnit.Framework;
-using MetaNexus.Lib.NeuralNetwork.Tensors;
-using System;
+﻿using MetaNexus.Lib.NeuralNetwork.Tensors;
 using MetaNexus.Lib.NeuralNetwork.Tensors.Abstractions;
 
-namespace MetaNexus.Lib.NeuralNetwork.Tests
+namespace MetaNexus.Lib.NeuralNetwork.Tests.Tensors
 {
     public class TensorElementWiseOperationsTests
     {

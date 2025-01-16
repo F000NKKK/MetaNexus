@@ -1,7 +1,6 @@
-﻿using NUnit.Framework;
-using MetaNexus.Lib.NeuralNetwork.Tensors;
+﻿using MetaNexus.Lib.NeuralNetwork.Tensors;
 
-namespace MetaNexus.Lib.NeuralNetwork.Tests
+namespace MetaNexus.Lib.NeuralNetwork.Tests.Tensors
 {
     [TestFixture]
     public class TensorAggregationOperationsTests

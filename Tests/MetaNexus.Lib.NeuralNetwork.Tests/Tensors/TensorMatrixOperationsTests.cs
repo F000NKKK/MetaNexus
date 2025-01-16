@@ -1,6 +1,6 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensors;
 
-namespace MetaNexus.Lib.NeuralNetwork.Tests
+namespace MetaNexus.Lib.NeuralNetwork.Tests.Tensors
 {
     public class TensorMatrixOperationsTests
     {

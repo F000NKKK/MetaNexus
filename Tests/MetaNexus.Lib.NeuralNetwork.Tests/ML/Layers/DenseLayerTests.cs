@@ -1,6 +1,6 @@
 ﻿namespace MetaNexus.Lib.NeuralNetwork.Tests;
 
-public class NeuralNetworkTests
+public class DenseLayerTests
 {
     [SetUp]
     public void Setup()
