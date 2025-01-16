@@ -48,6 +48,25 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             _data = new Memory<float>(data);
         }
 
+        public Tensor(int[] shape, Memory<float> data)
+        {
+            _shape = shape ?? throw new ArgumentNullException(nameof(shape));
+
+            Size = 1;
+            foreach (var dim in shape)
+            {
+                Size *= dim;
+            }
+
+            if (data.IsEmpty) throw new ArgumentNullException(nameof(data));
+            if (data.Length != Size)
+            {
+                throw new ArgumentException("Размер массива данных не соответствует размеру тензора.");
+            }
+
+            _data = data;
+        }
+
         public Tensor(Tensor existingTensor)
         {
             _shape = existingTensor._shape;

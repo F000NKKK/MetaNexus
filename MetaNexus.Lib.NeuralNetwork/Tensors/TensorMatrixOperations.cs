@@ -16,7 +16,8 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             int cols = other._shape[1];
             int commonDim = _shape[1];
 
-            var result = new Tensor(new int[] { rows, cols });
+            var resultData = new float[rows * cols];
+            var resultMemory = new Memory<float>(resultData);
 
             for (int i = 0; i < rows; i++)
             {
@@ -25,22 +26,44 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                     float sum = 0;
                     for (int k = 0; k < commonDim; k++)
                     {
-                        sum += _data.Span.ToArray()[i * commonDim + k] * other._data.Span.ToArray()[k * cols + j];
+                        sum += _data.Span[i * commonDim + k] * other._data.Span[k * cols + j];
                     }
-                    result._data.Span.ToArray()[i * cols + j] = sum;
+                    resultMemory.Span[i * cols + j] = sum;
                 }
             }
 
-            return result;
+            // Возвращаем новый тензор с результатом умножения
+            return new Tensor(new int[] { rows, cols }, resultMemory);
         }
 
         public Tensor MatrixDivide(Tensor other)
         {
-            if (other._shape[0] != other._shape[1])
-                throw new InvalidOperationException("Для матричного деления вторая матрица должна быть квадратной.");
+            Console.WriteLine("Начало операции матричного деления.");
 
+            // Проверка, что вторая матрица квадратная
+            if (other._shape[0] != other._shape[1])
+            {
+                throw new InvalidOperationException("Для матричного деления вторая матрица должна быть квадратной.");
+            }
+            Console.WriteLine($"Вторая матрица (other): {_shape[0]}x{_shape[1]}");
+
+            // Выполнение инверсии второй матрицы
+            Console.WriteLine("Вычисление обратной матрицы для второй матрицы.");
             Tensor inverseOther = other.Inverse();
-            return this.Dot(inverseOther);
+
+            // Логирование данных инверсии
+            Console.WriteLine($"Данные инверсии второй матрицы (inverseOther):");
+            Console.WriteLine(inverseOther.ToString());
+
+            // Умножение текущей матрицы на инвертированную матрицу
+            Console.WriteLine("Выполнение умножения текущей матрицы на обратную матрицу второй.");
+            Tensor result = this.Dot(inverseOther);
+
+            // Логирование результата умножения
+            Console.WriteLine("Результат матричного деления (умножения на обратную матрицу):");
+            Console.WriteLine(result.ToString());
+
+            return result;
         }
 
         public float Determinant()
@@ -54,9 +77,14 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
         public Tensor Inverse()
         {
             if (_shape[0] != _shape[1])
+            {
+                Console.WriteLine("Ошибка: Обратную матрицу можно вычислить только для квадратных матриц.");
                 throw new InvalidOperationException("Обратную матрицу можно вычислить только для квадратных матриц.");
+            }
 
-            return CalculateInverse(_data.Span.ToArray(), _shape[0]);
+            var inverseTensor = CalculateInverse(_data.Span.ToArray(), _shape[0]);
+           
+            return inverseTensor;
         }
 
         private float CalculateDeterminant(float[] matrixData, int n)
