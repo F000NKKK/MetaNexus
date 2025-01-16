@@ -29,6 +29,13 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers
                 _gamma[i] = 1.0f;
                 _beta[i] = 0.0f;
             }
+
+            // Инициализация среднего и дисперсии
+            for (int i = 0; i < size; i++)
+            {
+                _avg[i] = 0.0f;
+                _variance[i] = 1.0f; // Инициализируем дисперсию как 1, так как для нормализации это безопасно
+            }
         }
 
         /// <summary>
@@ -38,7 +45,31 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers
         /// <returns>Нормализованный выходной тензор.</returns>
         public override Tensor Forward(Tensor input)
         {
-            throw new NotImplementedException();
+            Tensor output = new Tensor(input.Shape);
+
+            if (_training)
+            {
+                // В процессе обучения нормализуем данные по мини-батчу
+                Tensor mean = input.Avg(0); // Среднее по 0-ой оси (по каждому каналу)
+                Tensor variance = input.Variance(0); // Дисперсия по 0-ой оси
+
+                // Нормализуем вход по мини-батчу
+                output = input.BatchNormalize(mean, variance);
+
+                // Обновляем среднее и дисперсию для использования при инференсе
+                _avg = _avg * 0.9f + mean * 0.1f;  // Используем скользящее среднее
+                _variance = _variance * 0.9f + variance * 0.1f;  // Используем скользящее среднее
+            }
+            else
+            {
+                // Для инференса используем глобальное среднее и дисперсию
+                output = input.BatchNormalize(_avg, _variance);
+            }
+
+            // Применяем гамма и бета
+            output = output * _gamma + _beta;
+
+            return output;
         }
     }
 }

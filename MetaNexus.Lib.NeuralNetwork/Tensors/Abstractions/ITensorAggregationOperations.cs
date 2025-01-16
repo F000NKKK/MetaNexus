@@ -30,11 +30,26 @@
         float Avg();
 
         /// <summary>
+        /// Вычисление среднего элементов вдоль указанной оси.
+        /// </summary>
+        /// <param name="axis">Ось, вдоль которой будет вычислено среднее.</param>
+        /// <returns></returns>
+        Tensor Avg(int axis);
+
+        /// <summary>
         /// Вычисление суммы элементов вдоль указанной оси.
         /// </summary>
         /// <param name="axis">Ось, вдоль которой будет вычислена сумма.</param>
         /// <returns>Новый тензор с результатами суммирования.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Бросается, если ось выходит за пределы допустимых значений.</exception>
         Tensor Sum(int axis);
 
+        /// <summary>
+        /// Вычисление дисперсии элементов вдоль указанной оси.
+        /// </summary>
+        /// <param name="axis">Ось, вдоль которой будет вычислена дисперсия.</param>
+        /// <returns>Новый тензор с результатами вычисления дисперсии.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Бросается, если ось выходит за пределы допустимых значений.</exception>
+        Tensor Variance(int axis);
     }
 }
