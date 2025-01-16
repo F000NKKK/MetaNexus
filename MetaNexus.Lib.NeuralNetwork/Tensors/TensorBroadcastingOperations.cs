@@ -1,6 +1,4 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensors.Abstractions;
-using System;
-using System.Linq;
 
 namespace MetaNexus.Lib.NeuralNetwork.Tensors
 {
