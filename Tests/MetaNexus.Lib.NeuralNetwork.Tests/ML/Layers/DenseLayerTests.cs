@@ -1,15 +1,17 @@
-﻿namespace MetaNexus.Lib.NeuralNetwork.Tests;
-
-public class DenseLayerTests
+﻿namespace MetaNexus.Lib.NeuralNetwork.Tests.ML.Layers
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
 
-    [Test]
-    public void Test1()
+    public class DenseLayerTests
     {
-        Assert.Pass();
+        [SetUp]
+        public void Setup()
+        {
+        }
+
+        [Test]
+        public void Test1()
+        {
+            Assert.Pass();
+        }
     }
 }
