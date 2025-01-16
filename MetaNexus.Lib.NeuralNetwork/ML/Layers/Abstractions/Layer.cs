@@ -35,6 +35,9 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
             if (size <= 0)
                 throw new ArgumentException("Размер слоя должен быть положительным числом.");
 
+            if (inputSize <= 0)
+                throw new ArgumentException("Размер входа должен быть положительным числом.");
+
             ((ILayer)this).InitializeWeightsAndBiases();
         }
 
@@ -97,6 +100,9 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
             if (size <= 0)
                 throw new ArgumentException("Размер слоя должен быть положительным числом.");
 
+            if (inputSize <= 0)
+                throw new ArgumentException("Размер входа должен быть положительным числом.");
+
             Size = size;
             InputSize = inputSize;
 
@@ -123,6 +129,12 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
             ActivationFunc activationFunction,
             ActivationPrimeFunc activationPrimeFunction)
         {
+            if (size <= 0)
+                throw new ArgumentException("Размер слоя должен быть положительным числом.");
+
+            if (inputSize <= 0)
+                throw new ArgumentException("Размер входа должен быть положительным числом.");
+
             if (weights.Shape[0] != inputSize || weights.Shape[1] != size)
                 throw new ArgumentException("Размеры тензоров весов не совпадают с размером слоя.");
 
@@ -182,9 +194,21 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
 
         public Tensor Backward(Tensor delta, float learningRate)
         {
-            if (!(!Equals(input, null) && input.Shape != null))
+            if (Equals(input, null) || input.Shape == null)
             {
                 throw new ArgumentNullException(nameof(input), "Входной тензор не может быть null.");
+            }
+
+            // Преобразуем входной тензор в двумерный, если он одномерный
+            if (input.Shape.Length == 1)
+            {
+                input = input.Reshape(new int[] { 1, input.Shape[0] });
+            }
+
+            // Преобразуем delta в двумерный тензор, если он одномерный
+            if (delta.Shape.Length == 1)
+            {
+                delta = delta.Reshape(new int[] { 1, delta.Shape[0] });
             }
 
             // 1. Градиенты для весов и смещений
@@ -212,6 +236,7 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
 
             return previousDelta;
         }
+
 
         /// <summary>
         /// Тензор смещений для слоя.
