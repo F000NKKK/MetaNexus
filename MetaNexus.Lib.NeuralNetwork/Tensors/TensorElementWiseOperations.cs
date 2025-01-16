@@ -7,7 +7,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
         public Tensor ElementWiseOperation(ITensor other, Func<float, float, float> operation)
         {
             if (!Shape.SequenceEqual(other.Shape))
-                throw new InvalidOperationException("Tensors must have the same shape for element-wise operation.");
+                throw new InvalidOperationException("Тензоры должны иметь одинаковую форму для поэлементной работы.");
 
             Tensor result = new Tensor(Shape);
             for (int i = 0; i < Size; i++)
