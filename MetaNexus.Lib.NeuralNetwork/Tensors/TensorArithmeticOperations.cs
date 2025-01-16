@@ -16,11 +16,17 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
 
         public Tensor Divide(Tensor other)
         {
+            if (other._data.Span.Contains(0f))
+                throw new DivideByZeroException("Cannot divide by a tensor containing zero.");
+
             return ((ITensorElementWiseOperations)this).ElementWiseOperation(other, (a, b) => a / b);
         }
 
         public Tensor Divide(float scalar)
         {
+            if (scalar == 0f)
+                throw new DivideByZeroException("Cannot divide by zero scalar.");
+
             return ((ITensorElementWiseOperations)this).ElementWiseOperation(scalar, (a, b) => a / b);
         }
 
