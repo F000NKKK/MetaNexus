@@ -213,8 +213,6 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
             return previousDelta;
         }
 
-
-
         /// <summary>
         /// Тензор смещений для слоя.
         /// </summary>

@@ -97,6 +97,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests.ML.Layers.Abstractions
             Assert.That(outputTensor.Shape[1], Is.EqualTo(size));
         }
 
+
         [Test]
         public void Test_Backward_Valid()
         {
@@ -104,14 +105,15 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests.ML.Layers.Abstractions
             int size = 2;
             var layer = new MockLayer(inputSize, size);
 
+            var input = new Tensor(new int[] { 1, inputSize }); // Двумерный тензор
+            layer.Forward(input);
+
             var delta = new Tensor(new int[] { size });
             var learningRate = 0.01f;
 
-            layer.Forward(delta.Inverse());
-
             var previousDelta = layer.Backward(delta, learningRate);
 
-            Assert.That(previousDelta.Shape[0], Is.EqualTo(inputSize));
+            Assert.That(previousDelta.Shape[1], Is.EqualTo(inputSize));
         }
 
         // Мок-реализация слоя для тестирования
@@ -129,11 +131,15 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests.ML.Layers.Abstractions
 
             public override Tensor Forward(Tensor input)
             {
-                // Приводим входной тензор к двумерной форме [1, inputSize] для выполнения умножения
-                Tensor reshapedInput = input.Reshape(new int[] { 1, input.Shape[0] }); // [1, inputSize]
+                if (input.Shape.Length == 1)
+                {
+                    input = input.Reshape(new int[] { 1, input.Shape[0] }); // Преобразуем в двумерный тензор
+                }
+
+                this.input = input; // Сохраняем входной тензор для использования в Backward
 
                 // Умножаем вход на веса (результат [1, outputSize])
-                Tensor output = reshapedInput.Dot(weights);
+                Tensor output = input.Dot(weights);
 
                 // Проверяем, что смещения имеют правильную форму
                 if (biases.Shape[0] == 1)
