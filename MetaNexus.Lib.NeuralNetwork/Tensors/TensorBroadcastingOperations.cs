@@ -6,7 +6,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
 {
     public partial struct Tensor : ITensorBroadcastingOperations
     {
-        // Проверка возможности broadcasting двух тензоров
         public bool CanBroadcast(Tensor other)
         {
             int maxLength = Math.Max(this.Shape.Length, other.Shape.Length);
@@ -49,7 +48,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             return expandedTensor1.Add(expandedTensor2);
         }
 
-        // Операция вычитания с трансляцией
         public Tensor BroadcastSubtract(Tensor other)
         {
             if (!CanBroadcast(other))
@@ -57,13 +55,20 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 throw new InvalidOperationException("Невозможно выполнить операцию с трансляцией для этих тензоров.");
             }
 
+            // Расширяем оба тензора до одинаковой формы.
             Tensor expandedTensor1 = this.ExpandToBroadcast(other.Shape);
             Tensor expandedTensor2 = other.ExpandToBroadcast(this.Shape);
 
+            // Проверяем, совпадают ли формы после расширения
+            if (!expandedTensor1.Shape.SequenceEqual(expandedTensor2.Shape))
+            {
+                throw new InvalidOperationException("Формы расширенных тензоров не совпадают после трансляции.");
+            }
+
+            // Выполняем операцию вычитания.
             return expandedTensor1.Subtract(expandedTensor2);
         }
 
-        // Операция умножения с трансляцией
         public Tensor BroadcastMultiply(Tensor other)
         {
             if (!CanBroadcast(other))
@@ -77,7 +82,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             return expandedTensor1.Multiply(expandedTensor2);
         }
 
-        // Операция деления с трансляцией
         public Tensor BroadcastDivide(Tensor other)
         {
             if (!CanBroadcast(other))
