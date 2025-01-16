@@ -28,7 +28,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
 
             var expectedData = new float[] { 7, 7, 7, 7, 7, 7 };
 
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
 
             var expectedData = new float[] { -5, -3, -1, 1, 3, 5 };
 
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
 
             var expectedData = new float[] { 2, 4, 6, 8, 10, 12 };
 
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
 
             var expectedData = new float[] { 4, 5, 6, 7, 8, 9 };
 
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
 
             var expectedData = new float[] { 1, 2, 3, 4, 5, 6 };
 
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
     }
 }

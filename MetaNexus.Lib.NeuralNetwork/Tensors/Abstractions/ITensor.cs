@@ -31,7 +31,7 @@
         /// <returns>Общее количество элементов в тензоре.</returns>
         int Size { get; }
 
-        float[] Data { get; }
+        Memory<float> Data { get; }
 
         /// <summary>
         /// Проверка, является ли тензор пустым (не содержит элементов).

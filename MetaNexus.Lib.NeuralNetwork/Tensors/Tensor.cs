@@ -89,7 +89,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 }
 
                 int flatIndex = GetFlatIndex(indices);
-                return _data.Span[flatIndex];  // Доступ через Span
+                return this[flatIndex];  // Доступ через Span
             }
             set
             {
@@ -104,7 +104,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 }
 
                 int flatIndex = GetFlatIndex(indices);
-                _data.Span[flatIndex] = value;
+                this[flatIndex] = value;
             }
         }
 
@@ -135,7 +135,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             }
         }
 
-        public float[] Data => _data.Span.ToArray();
+        public Memory<float> Data => _data;
 
         public int[] Shape => _shape;
 
@@ -168,7 +168,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
         public Tensor Flatten()
         {
             // Создаем новый тензор с одномерным массивом
-            return new Tensor(new int[] { Size }, _data.Span.ToArray());
+            return new Tensor(new int[] { Size }, _data);
         }
 
         public bool IsEmpty()

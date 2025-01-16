@@ -164,7 +164,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
         public void ApplySigmoidPrime_Test()
         {
             var result = Tensor.ApplySigmoidPrimeStatic(tensor);
-            Assert.That(result.Data, Is.EqualTo(new float[]
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(new float[]
             {
                 0.19661193f,
                 0.25f,
@@ -179,7 +179,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
         public void ApplyTanhPrime_Test()
         {
             var result = Tensor.ApplyTanhPrimeStatic(tensor);
-            Assert.That(result.Data, Is.EqualTo(new float[]
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(new float[]
             {
                 0.41997434f,
                 1f,
@@ -194,7 +194,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
         public void ApplyReLUPrime_Test()
         {
             var result = Tensor.ApplyReLUPrimeStatic(tensor);
-            Assert.That(result.Data, Is.EqualTo(new float[] { 0f, 0f, 1f, 1f, 0f, 1f }));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(new float[] { 0f, 0f, 1f, 1f, 0f, 1f }));
         }
 
         [Test]
@@ -202,14 +202,14 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
         {
             float alpha = 0.1f;
             var result = Tensor.ApplyLeakyReLUPrimeStatic(tensor, alpha);
-            Assert.That(result.Data, Is.EqualTo(new float[] { 0.1f, 0.1f, 1f, 1f, 0.1f, 1f }));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(new float[] { 0.1f, 0.1f, 1f, 1f, 0.1f, 1f }));
         }
 
         [Test]
         public void ApplySoftplusPrime_Test()
         {
             var result = Tensor.ApplySoftplusPrimeStatic(tensor);
-            Assert.That(result.Data, Is.EqualTo(new float[]
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(new float[]
             {
                 0.26894142f,
                 0.5f,
@@ -224,7 +224,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
         public void ApplySwishPrime_Test()
         {
             var result = Tensor.ApplySwishPrimeStatic(tensor);
-            Assert.That(result.Data, Is.EqualTo(new float[]
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(new float[]
             {
                 0.07232949f,
                 0.5f,
@@ -241,7 +241,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
         public void ApplyGELUPrime_Test()
         {
             var result = Tensor.ApplyGELUPrimeStatic(tensor);
-            Assert.That(result.Data, Is.EqualTo(new float[]
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(new float[]
             {
                 0.130211473f, 
                 0.5f,
@@ -257,21 +257,21 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
         public void ApplyHardSigmoidPrime_Test()
         {
             var result = Tensor.ApplyHardSigmoidPrimeStatic(tensor);
-            Assert.That(result.Data, Is.EqualTo(new float[] { 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0f }));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(new float[] { 0.2f, 0.2f, 0.2f, 0.2f, 0.2f, 0f }));
         }
 
         [Test]
         public void ApplyHardTanhPrime_Test()
         {
             var result = Tensor.ApplyHardTanhPrimeStatic(tensor);
-            Assert.That(result.Data, Is.EqualTo(new float[] { 0f, 1f, 0f, 0f, 0f, 0f }));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(new float[] { 0f, 1f, 0f, 0f, 0f, 0f }));
         }
 
         [Test]
         public void ApplyMishPrime_Test()
         {
             var result = Tensor.ApplyMishPrimeStatic(tensor);
-            Assert.That(result.Data, Is.EqualTo(new float[]
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(new float[]
             {
                 0.30058962f,
                 0.65f,
@@ -286,7 +286,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
         public void ApplyIdentity_Test()
         {
             var result = Tensor.ApplyIdentityStatic(tensor);
-            Assert.That(result.Data, Is.EqualTo(new float[] { -1f, 0f, 1f, 2f, -2f, 3f }));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(new float[] { -1f, 0f, 1f, 2f, -2f, 3f }));
         }
 
         private float[] ComputeExpectedLeakyReLU(float[] input, float alpha)

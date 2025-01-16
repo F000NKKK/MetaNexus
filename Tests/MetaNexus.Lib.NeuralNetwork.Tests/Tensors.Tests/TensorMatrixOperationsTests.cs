@@ -22,7 +22,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = tensor.Inverse();
 
             // Проверка, что результат соответствует ожидаемой обратной матрице
-            Assert.That(result.Data, Is.EqualTo(expectedInverse.Data).Within(0.0001f));  // Допускаем погрешность
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedInverse.Data.Span.ToArray()).Within(0.0001f));  // Допускаем погрешность
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var identityMatrix = new Tensor(new int[] { 2, 2 }, new float[] { 1f, 0f, 0f, 1f });
 
             // Проверка, что результат умножения равен единичной матрице
-            Assert.That(result.Data, Is.EqualTo(identityMatrix.Data).Within(0.0001f));  // Допускаем погрешность
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(identityMatrix.Data.Span.ToArray()).Within(0.0001f));  // Допускаем погрешность
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
 
             // Ожидаемый результат: 2x2 матрица
             var expectedData = new float[] { 58, 64, 139, 154 }; // Результат умножения
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
 
             // Ожидаемый результат после деления (умножения на обратную матрицу tensor2)
             var expectedData = new float[] { 3.0f, -2.0f, 2.0f, -1.0f };
-            Assert.That(result.Data, Is.EqualTo(expectedData).Within(0.0001f)); // Допускаем ошибку погрешности
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData).Within(0.0001f)); // Допускаем ошибку погрешности
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
 
             // Ожидаемая обратная матрица
             var expectedData = new float[] { 0.6f, -0.7f, -0.2f, 0.4f };
-            Assert.That(result.Data, Is.EqualTo(expectedData).Within(0.0001f)); // Допускаем погрешность
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData).Within(0.0001f)); // Допускаем погрешность
         }
 
         [Test]

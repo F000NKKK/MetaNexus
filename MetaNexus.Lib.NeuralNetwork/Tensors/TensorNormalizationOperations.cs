@@ -9,23 +9,23 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             float mean = 0;
             float variance = 0;
 
-            foreach (var value in _data.Span.ToArray())
+            foreach (var value in _data.Span)
             {
                 mean += value;
             }
             mean /= Size;
 
-            foreach (var value in _data.Span.ToArray())
+            foreach (var value in _data.Span)
             {
                 variance += (value - mean) * (value - mean);
             }
             variance /= Size;
-            float stdDev = (float)Math.Sqrt(variance);
+            float stdDev = MathF.Sqrt(variance);
 
             var result = new Tensor(_shape);
             for (int i = 0; i < Size; i++)
             {
-                result._data.Span.ToArray()[i] = (this._data.Span.ToArray()[i] - mean) / stdDev;
+                result._data.Span[i] = (this._data.Span[i] - mean) / stdDev;
             }
 
             return result;
@@ -39,17 +39,17 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             var result = new Tensor(_shape);
             for (int i = 0; i < Size; i++)
             {
-                result._data.Span.ToArray()[i] = (this._data.Span.ToArray()[i] - mean._data.Span.ToArray()[i]) / (float)Math.Sqrt(variance._data.Span.ToArray()[i] + 1e-8f);
+                result._data.Span[i] = (this._data.Span[i] - mean._data.Span[i]) / MathF.Sqrt(variance._data.Span[i] + 1e-8f);
             }
             return result;
         }
 
         public Tensor MinMaxNormalize()
         {
-            float min = _data.Span.ToArray()[0];
-            float max = _data.Span.ToArray()[0];
+            float min = _data.Span[0];
+            float max = _data.Span[0];
 
-            foreach (var value in _data.Span.ToArray())
+            foreach (var value in _data.Span)
             {
                 if (value < min) min = value;
                 if (value > max) max = value;
@@ -58,7 +58,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             var result = new Tensor(_shape);
             for (int i = 0; i < Size; i++)
             {
-                result._data.Span.ToArray()[i] = (_data.Span.ToArray()[i] - min) / (max - min);
+                result._data.Span[i] = (_data.Span[i] - min) / (max - min);
             }
 
             return result;
@@ -72,7 +72,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             var result = new Tensor(_shape);
             for (int i = 0; i < Size; i++)
             {
-                result._data.Span.ToArray()[i] = (this._data.Span.ToArray()[i] - mean._data.Span.ToArray()[i]) / (float)Math.Sqrt(variance._data.Span.ToArray()[i] + 1e-8f);
+                result._data.Span[i] = (this._data.Span[i] - mean._data.Span[i]) / MathF.Sqrt(variance._data.Span[i] + 1e-8f);
             }
             return result;
         }
@@ -82,34 +82,48 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             float mean = 0;
             float variance = 0;
 
-            foreach (var value in _data.Span.ToArray())
+            // Вычисляем среднее значение
+            foreach (var value in _data.Span)
             {
                 mean += value;
             }
             mean /= Size;
 
-            foreach (var value in _data.Span.ToArray())
+            // Вычисляем дисперсию
+            foreach (var value in _data.Span)
             {
                 variance += (value - mean) * (value - mean);
             }
             variance /= Size;
-            float stdDev = (float)Math.Sqrt(variance);
 
+            // Вычисляем стандартное отклонение
+            float stdDev = MathF.Sqrt(variance);
+
+            // Если стандартное отклонение равно 0 (все элементы одинаковы), возвращаем исходный тензор
+            if (stdDev == 0)
+            {
+                return this;
+            }
+
+            // Создаем новый тензор для результата
             var result = new Tensor(_shape);
+
+            // Стандартизируем значения
             for (int i = 0; i < Size; i++)
             {
-                result._data.Span.ToArray()[i] = (this._data.Span.ToArray()[i] - mean) / stdDev;
+                result._data.Span[i] = (this._data.Span[i] - mean) / stdDev;
             }
 
             return result;
         }
+
 
         public Tensor LabelNormalize(int numClasses)
         {
             var result = new Tensor(_shape);
             for (int i = 0; i < Size; i++)
             {
-                result._data.Span.ToArray()[i] = this._data.Span.ToArray()[i] / numClasses;
+                result._data.Span[i] = this._data.Span[i] / numClasses;
             }
 
             return result;

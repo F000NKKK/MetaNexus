@@ -25,7 +25,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = _tensor1 + _tensor2;
 
             var expectedData = new float[] { 7, 7, 7, 7, 7, 7 };
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = _tensor1 - _tensor2;
 
             var expectedData = new float[] { -5, -3, -1, 1, 3, 5 };
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = _tensor1 * _tensor2;
 
             var expectedData = new float[] { 6, 10, 12, 12, 10, 6 };
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = _tensor1 / _tensor2;
 
             var expectedData = new float[] { 1f / 6, 2f / 5, 3f / 4, 4f / 3, 5f / 2, 6f / 1 };
-            Assert.That(result.Data, Is.EqualTo(expectedData).Within(0.0001f));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData).Within(0.0001f));
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = _tensor1 + scalar;
 
             var expectedData = new float[] { 4, 5, 6, 7, 8, 9 };
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = _tensor1 - scalar;
 
             var expectedData = new float[] { -1, 0, 1, 2, 3, 4 };
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = _tensor1 * scalar;
 
             var expectedData = new float[] { 2, 4, 6, 8, 10, 12 };
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = _tensor1 / scalar;
 
             var expectedData = new float[] { 0.5f, 1, 1.5f, 2, 2.5f, 3 };
-            Assert.That(result.Data, Is.EqualTo(expectedData).Within(0.0001f));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData).Within(0.0001f));
         }
 
         [Test]

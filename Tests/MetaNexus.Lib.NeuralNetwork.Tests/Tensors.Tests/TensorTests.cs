@@ -1,5 +1,4 @@
 ﻿using MetaNexus.Lib.NeuralNetwork.Tensors;
-using Newtonsoft.Json;
 
 namespace MetaNexus.Lib.NeuralNetwork.Tests
 {
@@ -204,8 +203,8 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             Assert.That(originalTensor.Shape, Is.EqualTo(copiedTensor.Shape));
             Assert.That(originalTensor.Size, Is.EqualTo(copiedTensor.Size));
             Assert.That(originalTensor.Rank, Is.EqualTo(copiedTensor.Rank));
-            Assert.That(originalTensor.Data, Is.EqualTo(copiedTensor.Data));
-            Assert.That(copiedTensor.Data, Is.EqualTo(data));
+            Assert.That(originalTensor.Data.Span.ToArray(), Is.EqualTo(copiedTensor.Data.Span.ToArray()));
+            Assert.That(copiedTensor.Data.Span.ToArray(), Is.EqualTo(data));
             for (int i = 0; i < shape[0]; i++)
             {
                 for (int j = 0; j < shape[1]; j++)

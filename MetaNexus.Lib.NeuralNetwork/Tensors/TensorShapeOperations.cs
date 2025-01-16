@@ -23,7 +23,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             return result;
         }
 
-        public Tensor Clip(float minValue, float maxValue) => new Tensor(_shape, this.Data.Select(x => Math.Clamp(x, minValue, maxValue)).ToArray());
+        public Tensor Clip(float minValue, float maxValue) => new Tensor(_shape, this.Data.Span.ToArray().Select(x => Math.Clamp(x, minValue, maxValue)).ToArray());
 
 
         public Tensor Reshape(int[] newShape)

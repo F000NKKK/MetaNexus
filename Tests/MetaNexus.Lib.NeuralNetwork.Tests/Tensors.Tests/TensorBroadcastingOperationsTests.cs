@@ -45,7 +45,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = tensor1.BroadcastAdd(tensor2);
             var expectedData = new float[] { 2, 4, 6, 5, 7, 9 }; // (2,3) + (1,3) -> результат (2,3)
 
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = _tensor1.BroadcastSubtract(_tensor3);
             var expectedData = new float[] { 0, 1, 2, 2, 3, 4 }; // (2,3) - (2,1) -> результат (2,3)
 
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = _tensor1.BroadcastMultiply(_tensor2);
             var expectedData = new float[] { 1, 4, 9, 4, 10, 18 }; // (2,3) * (1,3) -> результат (2,3)
 
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = _tensor1.BroadcastDivide(_tensor3);
             var expectedData = new float[] { 1, 2, 3, 2, 2.5f, 3 }; // (2,3) / (2,1) -> результат (2,3)
 
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests
             var result = tensor2.BroadcastAdd(tensor1);
 
             var expectedData = new float[] { 5, 7, 9, 8, 10, 12 };
-            Assert.That(result.Data, Is.EqualTo(expectedData));
+            Assert.That(result.Data.Span.ToArray(), Is.EqualTo(expectedData));
         }
     }
 }

@@ -91,7 +91,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             Tensor expandedTensor2 = other.ExpandToBroadcast(this.Shape);
 
             // Проверка деления на ноль
-            if (expandedTensor2.Data.Contains(0))
+            if (expandedTensor2.Data.Span.Contains(0))
             {
                 throw new DivideByZeroException("Деление на ноль невозможно.");
             }
