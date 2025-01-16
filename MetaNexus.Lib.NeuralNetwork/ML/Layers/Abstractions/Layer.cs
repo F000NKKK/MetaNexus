@@ -182,16 +182,14 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
 
         public Tensor Backward(Tensor delta, float learningRate)
         {
-            if (input.Shape == null)
+            if (!(!Equals(input, null) && input.Shape != null))
             {
-                throw new ArgumentNullException(nameof(input.Shape));
+                throw new ArgumentNullException(nameof(input), "Входной тензор не может быть null.");
             }
 
             // 1. Градиенты для весов и смещений
             Tensor weightGradient = input.Transpose().Dot(delta); // dE/dW - градиент весов
             Tensor biasGradient = delta.Sum(axis: 0);              // dE/db - градиент смещений
-
-
 
             // Приводим biasGradient к правильной размерности, если необходимо
             if (biasGradient.Shape[0] == 1 && biasGradient.Shape[1] == biases.Shape[0])
@@ -214,6 +212,7 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions
 
             return previousDelta;
         }
+
 
 
         /// <summary>

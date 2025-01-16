@@ -107,6 +107,8 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests.ML.Layers.Abstractions
             var delta = new Tensor(new int[] { size });
             var learningRate = 0.01f;
 
+            layer.Forward(delta.Inverse());
+
             var previousDelta = layer.Backward(delta, learningRate);
 
             Assert.That(previousDelta.Shape[0], Is.EqualTo(inputSize));
