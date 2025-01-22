@@ -27,5 +27,16 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             }
             return result;
         }
+
+        public Tensor ElementWiseOperation(Func<float, float> operation)
+        {
+            Tensor result = new Tensor(Shape);
+            for (int i = 0; i < Size; i++)
+            {
+                result._data.Span[i] = operation(_data.Span[i]);
+            }
+            return result;
+        }
+
     }
 }

@@ -12,13 +12,9 @@ namespace SimpleNeuralNetwork
             nn.AddLayer(new InputLayer(2, 2, Tensor.ApplyIdentityStatic, Tensor.ApplyIdentityStatic)); // 2 нейрона во входном слое
             nn.AddLayer(new DenseLayer(2, 512, Tensor.ApplyIdentityStatic, Tensor.ApplyIdentityStatic)); // 512 нейронов во входном слое
             nn.AddLayer(new DenseLayer(512, 1024, Tensor.ApplySwishStatic, Tensor.ApplySwishPrimeStatic)); // 1024 нейрона в скрытом слое
-            nn.AddLayer(new DenseLayer(1024, 2048, Tensor.ApplySwishStatic, Tensor.ApplySwishPrimeStatic)); // 2048 нейронов в скрытом слое
-            nn.AddLayer(new DenseLayer(2048, 4096, Tensor.ApplySwishStatic, Tensor.ApplySwishPrimeStatic)); // 4096 нейронов в скрытом слое
-            nn.AddLayer(new DenseLayer(4096, 8192, Tensor.ApplySwishStatic, Tensor.ApplySwishPrimeStatic)); // 8192 нейрона в скрытом слое
-            nn.AddLayer(new DenseLayer(8192, 16384, Tensor.ApplySwishStatic, Tensor.ApplySwishPrimeStatic)); // 16384 нейрона в скрытом слое
-            nn.AddLayer(new DenseLayer(16384, 1, Tensor.ApplyIdentityStatic, Tensor.ApplyIdentityStatic)); // Выходной слой с 1 нейроном
+            nn.AddLayer(new DenseLayer(1024, 1, Tensor.ApplyIdentityStatic, Tensor.ApplyIdentityStatic)); // Выходной слой с 1 нейроном
 
-            float learningRate = 0.0001f;
+            float learningRate = 0.1f;
             float decayRate = 0.95f;
             var epochs = 900; // Количество эпох для обучения
 
@@ -44,7 +40,7 @@ namespace SimpleNeuralNetwork
 
                 if (i % 100 == 0) // Каждые 100 эпох выводим прогресс
                 {
-                    Console.WriteLine($"Эпоха {i}, выходные данные: " + string.Join("; ", nn.Predict(new Tensor(new int[] { 1, 2 }, new float[] { 5f, 10f })).Data.ToList()));
+                    Console.WriteLine($"Эпоха {i}, выходные данные: " + string.Join("; ", nn.Predict(new Tensor(new int[] { 1, 2 }, new float[] { 5f, 10f })).Data.Span.ToArray()));
                 }
             }
 
@@ -53,7 +49,7 @@ namespace SimpleNeuralNetwork
             var output = nn.Predict(testInput);
 
             // Вывод данных из тензора как строки
-            Console.WriteLine("Прогнозируем результат: " + string.Join("; ", output.Data.ToList()));
+            Console.WriteLine("Прогнозируем результат: " + string.Join("; ", output.Data.Span.ToArray()));
         }
     }
 }

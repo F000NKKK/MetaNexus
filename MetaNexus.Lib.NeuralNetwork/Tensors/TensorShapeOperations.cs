@@ -100,12 +100,40 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
 
             for (int i = 0; i < Size; i++)
             {
-                indices = GetIndicesFromFlatIndex(i);
-                flatIndex = GetFlatIndexFromNewOrder(indices, newOrder);
+                indices = GetIndices(i);
+                flatIndex = GetFlatIndex(indices, newOrder);
                 result._data.Span.ToArray()[flatIndex] = tensor._data.Span.ToArray()[i];
             }
 
             return result;
         }
+
+        public Tensor Repeat(int repeats, int axis)
+        {
+            if (axis < 0 || axis >= _shape.Length)
+                throw new ArgumentException("Ось должна быть в пределах размерности тензора.");
+
+            // Определяем новую форму тензора
+            var newShape = (int[])_shape.Clone();
+            newShape[axis] *= repeats;
+
+            var result = new Tensor(newShape);
+
+            // Повторяем элементы вдоль указанной оси
+            int[] indices = new int[_shape.Length];
+            for (int i = 0; i < Size; i++)
+            {
+                indices = GetIndices(i);
+                for (int repeat = 0; repeat < repeats; repeat++)
+                {
+                    indices[axis] = (indices[axis] + repeat) % _shape[axis];
+                    int flatIndex = GetFlatIndex(indices);
+                    result._data.Span[flatIndex] = _data.Span[i];
+                }
+            }
+
+            return result;
+        }
+
     }
 }

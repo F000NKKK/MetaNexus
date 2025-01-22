@@ -233,7 +233,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests.Tensors
                 float a = tensor[0]; // Один индекс вместо двух
             });
 
-            Assert.That(ex.Message, Is.EqualTo("Количество индексов не соответствует рангу тензора."));
+            Assert.That(ex.Message, Is.EqualTo("Количество индексов должно соответствовать размерностям тензора."));
         }
 
         [Test]
@@ -251,7 +251,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests.Tensors
                 float a = tensor[2, 1]; // Индекс 2 для первого измерения выходит за пределы (только 0 и 1 допустимы)
             });
 
-            Assert.That(ex.Message, Is.EqualTo("Индексы выходят за пределы массива."));
+            Assert.That(ex.Message, Is.EqualTo("Индекс 2 выходит за пределы измерения 0 с размером 2."));
         }
 
 
@@ -285,7 +285,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tests.Tensors
             {
                 float a = tensor[2, 0];
             }); // Индекс вне допустимого диапазона
-            Assert.That(ex.Message, Is.EqualTo("Индексы выходят за пределы массива."));
+            Assert.That(ex.Message, Is.EqualTo("Индекс 2 выходит за пределы измерения 0 с размером 2."));
         }
 
         // Тест для FlattenFloatArray, чтобы проверить правильность возвращаемого массива

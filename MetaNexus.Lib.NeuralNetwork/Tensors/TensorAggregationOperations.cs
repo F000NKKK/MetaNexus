@@ -36,53 +36,6 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             return _data.Span.ToArray().Sum();
         }
 
-        public Tensor Avg(int axis)
-        {
-            if (axis < 0 || axis >= Rank)
-            {
-                throw new ArgumentOutOfRangeException(nameof(axis), "Ось для агрегации выходит за пределы ранга тензора.");
-            }
-
-            // Создаем форму для результирующего тензора
-            int[] resultShape = (int[])Shape.Clone();
-            resultShape[axis] = 1;  // Размерность по оси уменьшается до 1 после агрегации
-
-            // Создаем новый тензор для хранения результата
-            var result = new Tensor(resultShape);
-            int[] indices = new int[Rank];  // Индексы для исходного тензора
-
-            // Перебираем все индексы результирующего тензора
-            for (int i = 0; i < result.Size; i++)
-            {
-                // Преобразуем плоский индекс в многомерный для результирующего тензора
-                int[] resultIndices = new int[Rank];
-                int tempIndex = i;
-                for (int d = Rank - 1; d >= 0; d--)
-                {
-                    resultIndices[d] = tempIndex % resultShape[d];
-                    tempIndex /= resultShape[d];
-                }
-
-                float sum = 0;
-
-                // Для каждой позиции по оси агрегации считаем сумму
-                for (int j = 0; j < Shape[axis]; j++)
-                {
-                    // Копируем индексы для исходного тензора и изменяем только индекс по оси агрегации
-                    Array.Copy(resultIndices, indices, Rank);
-                    indices[axis] = j;  // Изменяем только по оси агрегации
-
-                    // Добавляем значение к сумме
-                    sum += this[indices];
-                }
-
-                // Среднее значение = сумма / количество элементов
-                result[resultIndices] = sum / Shape[axis];
-            }
-
-            return result;  // Возвращаем тензор с результатами среднего
-        }
-
         public Tensor Sum(int axis)
         {
             if (axis < 0 || axis >= Rank)
@@ -130,6 +83,48 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             return result;
         }
 
+        public Tensor Avg(int axis)
+        {
+            if (axis < 0 || axis >= Rank)
+            {
+                throw new ArgumentOutOfRangeException(nameof(axis), "Ось выходит за пределы ранга тензора.");
+            }
+
+            // Вычисляем среднее значение по указанной оси
+            int[] resultShape = (int[])Shape.Clone();
+            resultShape[axis] = 1; // Ось будет с размерностью 1 после агрегации
+
+            var result = new Tensor(resultShape);
+            int[] indices = new int[Rank];
+
+            for (int i = 0; i < result.Size; i++)
+            {
+                // Преобразуем плоский индекс в многомерный
+                int[] resultIndices = new int[Rank];
+                int tempIndex = i;
+                for (int d = Rank - 1; d >= 0; d--)
+                {
+                    resultIndices[d] = tempIndex % resultShape[d];
+                    tempIndex /= resultShape[d];
+                }
+
+                float sum = 0;
+
+                // Перебираем элементы по оси и суммируем
+                for (int j = 0; j < Shape[axis]; j++)
+                {
+                    Array.Copy(resultIndices, indices, Rank);
+                    indices[axis] = j;
+
+                    sum += this[indices];
+                }
+
+                result[resultIndices] = sum / Shape[axis]; // Среднее по оси
+            }
+
+            return result;
+        }
+
         public Tensor Variance(int axis)
         {
             if (axis < 0 || axis >= Rank)
@@ -137,18 +132,14 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 throw new ArgumentOutOfRangeException(nameof(axis), "Ось для агрегации выходит за пределы ранга тензора.");
             }
 
-            // Создаем форму для результирующего тензора
             int[] resultShape = (int[])Shape.Clone();
-            resultShape[axis] = 1;  // Размерность по оси уменьшается до 1 после агрегации
+            resultShape[axis] = 1; // Ось будет с размерностью 1 после агрегации
 
-            // Создаем новый тензор для хранения результата
             var result = new Tensor(resultShape);
-            int[] indices = new int[Rank];  // Индексы для исходного тензора
+            int[] indices = new int[Rank];
 
-            // Перебираем все индексы результирующего тензора
             for (int i = 0; i < result.Size; i++)
             {
-                // Преобразуем плоский индекс в многомерный для результирующего тензора
                 int[] resultIndices = new int[Rank];
                 int tempIndex = i;
                 for (int d = Rank - 1; d >= 0; d--)
@@ -160,20 +151,18 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                 float mean = 0;
                 float sumOfSquares = 0;
 
-                // Для каждой позиции по оси агрегации считаем сумму значений для среднего
+                // Если axis = 0, то по оси агрегации должно быть всего 1 элемент
+                // Если axis = 1, то агрегация будет по 3 элементам в batch
                 for (int j = 0; j < Shape[axis]; j++)
                 {
-                    // Копируем индексы для исходного тензора и изменяем только индекс по оси агрегации
                     Array.Copy(resultIndices, indices, Rank);
-                    indices[axis] = j;  // Изменяем только по оси агрегации
+                    indices[axis] = j;
 
-                    // Считаем сумму для вычисления среднего значения
                     mean += this[indices];
                 }
 
-                mean /= Shape[axis];  // Среднее по оси
+                mean /= Shape[axis]; // Среднее по оси
 
-                // Для каждой позиции по оси агрегации считаем сумму квадратов отклонений от среднего
                 for (int j = 0; j < Shape[axis]; j++)
                 {
                     Array.Copy(resultIndices, indices, Rank);
@@ -182,11 +171,10 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
                     sumOfSquares += (this[indices] - mean) * (this[indices] - mean);
                 }
 
-                // Дисперсия = сумма квадратов отклонений / количество элементов
-                result[resultIndices] = sumOfSquares / Shape[axis];
+                result[resultIndices] = sumOfSquares / Shape[axis]; // Дисперсия
             }
 
-            return result;  // Возвращаем тензор с результатами дисперсии
+            return result;
         }
     }
 }

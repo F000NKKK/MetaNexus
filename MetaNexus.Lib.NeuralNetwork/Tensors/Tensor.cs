@@ -75,37 +75,39 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             existingTensor._data.Span.CopyTo(_data.Span);
         }
 
+        private void ValidateIndices(int[] indices)
+        {
+            if (indices.Length != Shape.Length)
+                throw new ArgumentException("Количество индексов должно соответствовать размерностям тензора.");
+
+            for (int i = 0; i < indices.Length; i++)
+            {
+                if (indices[i] < 0 || indices[i] >= Shape[i])
+                    throw new ArgumentException($"Индекс {indices[i]} выходит за пределы измерения {i} с размером {Shape[i]}.");
+            }
+        }
+
         public float this[params int[] indices]
         {
             get
             {
-                if (indices.Length != _shape.Length)
-                    throw new ArgumentException("Количество индексов не соответствует рангу тензора.");
-
-                for (int i = 0; i < indices.Length; i++)
-                {
-                    if (indices[i] < 0 || indices[i] >= _shape[i])
-                        throw new ArgumentException("Индексы выходят за пределы массива.");
-                }
-
+                ValidateIndices(indices);
                 int flatIndex = GetFlatIndex(indices);
-                return this[flatIndex];  // Доступ через Span
+                return this[flatIndex];
             }
             set
             {
-                if (indices.Length != _shape.Length)
-                    throw new ArgumentException("Количество индексов не соответствует рангу тензора.");
-
-
-                for (int i = 0; i < indices.Length; i++)
-                {
-                    if (indices[i] < 0 || indices[i] >= _shape[i])
-                        throw new ArgumentException("Индексы выходят за пределы массива.");
-                }
-
+                ValidateIndices(indices);
                 int flatIndex = GetFlatIndex(indices);
                 this[flatIndex] = value;
             }
+        }
+
+        public Tensor Fill(float value)
+        {
+            _data.Span.Fill(value);
+
+            return this;
         }
 
         private int GetFlatIndex(int[] indices)
@@ -181,7 +183,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
         /// </summary>
         /// <param name="flatIndex">Плоский индекс (индекс элемента в одномерном массиве, который соответствует многомерному тензору).</param>
         /// <returns>Массив индексов, соответствующих многомерному положению элемента.</returns>
-        private int[] GetIndicesFromFlatIndex(int flatIndex)
+        private int[] GetIndices(int flatIndex)
         {
             // Массив для хранения индексов для каждого измерения
             int[] indices = new int[Rank];
@@ -199,7 +201,7 @@ namespace MetaNexus.Lib.NeuralNetwork.Tensors
             return indices;
         }
 
-        private int GetFlatIndexFromNewOrder(int[] indices, int[] newOrder)
+        private int GetFlatIndex(int[] indices, int[] newOrder)
         {
             int flatIndex = 0;
             int multiplier = 1;
