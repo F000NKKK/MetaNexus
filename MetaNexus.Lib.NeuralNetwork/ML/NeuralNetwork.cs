@@ -1,14 +1,18 @@
-﻿using MetaNexus.Lib.NeuralNetwork.ML.Abstractions;
+﻿using MetaNexus.Lib.Metrics.Host;
+using MetaNexus.Lib.Metrics.Models;
+using MetaNexus.Lib.Metrics.Services.Abstractions;
+using MetaNexus.Lib.NeuralNetwork.ML.Abstractions;
 using MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions;
 using MetaNexus.Lib.NeuralNetwork.Tensors;
-using Newtonsoft.Json;
 
 public class NeuralNetwork : INetwork
 {
     private List<ILayer> layers;
+    private IMetricsService _metricsService;
 
-    public NeuralNetwork()
+    public NeuralNetwork(IMetricsService metricsService)
     {
+        _metricsService = metricsService;
         layers = new List<ILayer>();
     }
 
@@ -25,6 +29,7 @@ public class NeuralNetwork : INetwork
         foreach (var layer in layers)
         {
             output = layer.Forward(output);
+            _metricsService.SubmitMetric(MetricNames.PREDICTS_INPUT_OUTPUT_DATA, 1, new List<MetricLabel>() { new MetricLabel("input", $"{input.ToString()}"), new MetricLabel("output", $"{output.ToString()}") });
         }
 
         return output;

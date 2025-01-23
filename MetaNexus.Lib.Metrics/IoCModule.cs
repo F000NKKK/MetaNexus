@@ -5,6 +5,7 @@ using MetaNexus.Lib.Metrics.Host.Abstractions;
 using MetaNexus.Lib.Metrics.Services;
 using MetaNexus.Lib.Metrics.Services.Abstractions;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using System.Diagnostics.Metrics;
 
@@ -13,11 +14,12 @@ namespace MetaNexus.Lib.Metrics
     public class IoCModule : Module
     {
         const string meterName = "MetaNexusMetrics";
-        const string otlpEndpointHttp = "http://localhost:4318";
+        const string otlpEndpointHttp = "http://localhost:4317";
+        const OtlpExportProtocol otlpExportProtocol = OtlpExportProtocol.Grpc;
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterInstance(MetricsConfiguration.ConfigureMeterProvider(meterName, otlpEndpointHttp))
+            builder.RegisterInstance(MetricsConfiguration.ConfigureMeterProvider(meterName, otlpEndpointHttp, otlpExportProtocol))
                 .As<MeterProvider>()
                 .SingleInstance();
 

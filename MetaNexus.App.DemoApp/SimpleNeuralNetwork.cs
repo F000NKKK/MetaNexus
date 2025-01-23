@@ -1,6 +1,5 @@
-﻿using MetaNexus.Lib.NeuralNetwork.Tensors;
-using System;
-using System.Collections.Generic;
+﻿using MetaNexus.Lib.Metrics.Services.Abstractions;
+using MetaNexus.Lib.NeuralNetwork.Tensors;
 
 namespace MetaNexus.App.DemoApp
 {
@@ -8,9 +7,9 @@ namespace MetaNexus.App.DemoApp
     {
         private NeuralNetwork nn;
 
-        public SimpleNeuralNetwork()
+        public SimpleNeuralNetwork(IMetricsService metricsService)
         {
-            nn = new NeuralNetwork();
+            nn = new NeuralNetwork(metricsService);
 
             // Архитектура сети с уменьшенными слоями, чтобы избежать переполнения
             nn.AddLayer(new InputLayer(2, 2, Tensor.ApplyIdentityStatic, Tensor.ApplyIdentityStatic)); // 2 нейрона во входном слое

@@ -2,6 +2,7 @@
 using MetaNexus.Lib.Metrics.Models;
 using MetaNexus.Lib.Metrics.Services.Abstractions;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Metrics;
 using System.Diagnostics.Metrics;
 
 namespace MetaNexus.Lib.Metrics.Services
@@ -12,13 +13,15 @@ namespace MetaNexus.Lib.Metrics.Services
         private readonly IMetricsHost _metricsHost;
         private readonly ILogger<MetricsService> _logger;
         private readonly Dictionary<string, object> _metricCache;
+        private readonly MeterProvider _meterProvider;
 
-        public MetricsService(Meter meter, IMetricsHost metricsHost, ILogger<MetricsService> logger)
+        public MetricsService(Meter meter, IMetricsHost metricsHost, ILogger<MetricsService> logger, MeterProvider meterProvider)
         {
             _meter = meter;
             _metricsHost = metricsHost;
             _logger = logger;
             _metricCache = new Dictionary<string, object>();
+            _meterProvider = meterProvider;
         }
 
         public void SubmitMetric(string name, double value, IEnumerable<MetricLabel>? labels = null)

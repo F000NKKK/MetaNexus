@@ -9,8 +9,8 @@ namespace MetaNexus.App.DemoApp
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterModule<MetaNexus.App.DemoApp.Modules.NeuralNetwork.IoCModule>();
             builder.RegisterModule<MetaNexus.Lib.Metrics.IoCModule>();
+            builder.RegisterModule<MetaNexus.App.DemoApp.Modules.NeuralNetwork.IoCModule>();
 
             var container = builder.Build();
 
