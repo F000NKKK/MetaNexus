@@ -4,6 +4,6 @@ namespace MetaNexus.Lib.Metrics.Services.Abstractions
 {
     public interface IMetricsService
     {
-        void SubmitMetric(Metric metricEvent);
+        void SubmitMetric(string name, double value, IEnumerable<MetricLabel> labels = null);
     }
 }

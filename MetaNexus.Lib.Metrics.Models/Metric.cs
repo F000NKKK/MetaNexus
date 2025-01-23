@@ -35,7 +35,7 @@
                 if (value == null)
                     _labels = Array.Empty<MetricLabel>();
                 else
-                    _labels = value;
+                    _labels = value.ToArray();
             }
         }
 

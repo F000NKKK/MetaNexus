@@ -19,6 +19,7 @@ namespace MetaNexus.Lib.Metrics.Host
                 MetricNames.REQUEST_COUNT => CreateMetric(name, MetricType.Counter, value, labels),
                 MetricNames.ACTIVE_USERS => CreateMetric(name, MetricType.Gauge, value, labels),
                 MetricNames.REQUEST_LATENCY => CreateMetric(name, MetricType.Histogram, value, labels),
+                MetricNames.NEURAL_NETWORK_SERVICE_RUNS_TOTAL => CreateMetric(name, MetricType.Counter, value, labels),
                 _ => throw new KeyNotFoundException($"Metric with name '{name}' is nor defined in {nameof(MetricNames)}")
             };
         }

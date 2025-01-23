@@ -1,24 +1,23 @@
 ﻿using OpenTelemetry;
 using OpenTelemetry.Metrics;
-using System.Diagnostics.Metrics;
+using OpenTelemetry.Exporter;
 
 namespace MetaNexus.Lib.Metrics.Configurations
 {
     internal static class MetricsConfiguration
     {
-        public static Meter ConfigureMeter(string meterName, string otlpEndpoint)
+        public static MeterProvider ConfigureMeterProvider(string meterName, string otlpEndpointHttp)
         {
-            var meter = new Meter(meterName);
-
-            Sdk.CreateMeterProviderBuilder()
+            var meterProvider = Sdk.CreateMeterProviderBuilder()
                 .AddMeter(meterName)
                 .AddOtlpExporter(options =>
                 {
-                    options.Endpoint = new Uri(otlpEndpoint);
+                    options.Endpoint = new Uri(otlpEndpointHttp);
+                    options.Protocol = OtlpExportProtocol.HttpProtobuf;
                 })
                 .Build();
 
-            return meter;
+            return meterProvider;
         }
     }
 }
