@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MetaNexus.Lib.NeuralNetwork\MetaNexus.Lib.NeuralNetwork.csproj" />
+    <ProjectReference Include="..\..\Lib\MetaNexus.Lib.NeuralNetwork\MetaNexus.Lib.NeuralNetwork.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MetaNexus.Lib.Metrics.Models\MetaNexus.Lib.Metrics.Models.csproj" />
+    <ProjectReference Include="..\..\Lib\MetaNexus.Lib.Metrics.Models\MetaNexus.Lib.Metrics.Models.csproj" />
   </ItemGroup>
 
 </Project>

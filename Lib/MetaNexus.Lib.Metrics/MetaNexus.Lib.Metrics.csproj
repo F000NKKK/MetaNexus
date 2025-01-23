@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MetaNexus.Lib.Metrics.Host\MetaNexus.Lib.Metrics.Host.csproj" />
-    <ProjectReference Include="..\MetaNexus.Lib.Metrics.Models\MetaNexus.Lib.Metrics.Models.csproj" />
+    <ProjectReference Include="..\..\Lib\MetaNexus.Lib.Metrics.Host\MetaNexus.Lib.Metrics.Host.csproj" />
+    <ProjectReference Include="..\..\Lib\MetaNexus.Lib.Metrics.Models\MetaNexus.Lib.Metrics.Models.csproj" />
   </ItemGroup>
 
 </Project>
