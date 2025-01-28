@@ -29,7 +29,7 @@ public class NeuralNetwork : INetwork
         foreach (var layer in layers)
         {
             output = layer.Forward(output);
-            _metricsService.SubmitMetric(MetricNames.PREDICTS_INPUT_OUTPUT_DATA, 1, new List<MetricLabel>() { new MetricLabel("input", $"{input.ToString()}"), new MetricLabel("output", $"{output.ToString()}") });
+            _metricsService.SubmitMetric(MetricNames.PREDICTS_INPUT_OUTPUT_DATA, 1, new List<RawMetricLabel>() { new RawMetricLabel("input", $"{input.ToString()}"), new RawMetricLabel("output", $"{output.ToString()}") });
         }
 
         return output;

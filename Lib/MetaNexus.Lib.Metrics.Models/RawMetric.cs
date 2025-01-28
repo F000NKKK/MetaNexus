@@ -3,12 +3,11 @@
     /// <summary>
     /// Событие метрики.
     /// </summary>
-    public class Metric
+    public class RawMetric
     {
         private string _name;
-        private IEnumerable<MetricLabel> _labels;
+        private IEnumerable<RawMetricLabel> _labels;
         private double _value;
-        private MetricType _type;
 
         /// <summary>
         /// Название метрики.
@@ -27,13 +26,13 @@
         /// <summary>
         /// Метки метрики (ключ-значение).
         /// </summary>
-        public IEnumerable<MetricLabel>? Labels
+        public IEnumerable<RawMetricLabel>? Labels
         {
             get => _labels;
             protected set
             {
                 if (value == null)
-                    _labels = Array.Empty<MetricLabel>();
+                    _labels = Array.Empty<RawMetricLabel>();
                 else
                     _labels = value.ToArray();
             }
@@ -53,27 +52,16 @@
             }
         }
 
-        /// <summary>
-        /// Тип метрики.
-        /// </summary>
-        public MetricType Type
-        {
-            get => _type;
-            protected set => _type = value;
-        }
-
 #pragma warning disable CS8618
         /// <summary>
         /// Конструктор для создания события метрики.
         /// </summary>
         /// <param name="name">Название метрики.</param>
-        /// <param name="type">Тип метрики.</param>
         /// <param name="labels">Метки (ключ-значение).</param>
         /// <param name="value">Значение метрики.</param>
-        public Metric(string name, MetricType type, IEnumerable<MetricLabel>? labels, double value)
+        public RawMetric(string name, IEnumerable<RawMetricLabel>? labels, double value)
         {
             Name = name;
-            Type = type;
             Labels = labels;
             Value = value;
         }
@@ -81,7 +69,7 @@
         /// <summary>
         /// Конструктор для десериализации.
         /// </summary>
-        protected Metric() { }
+        protected RawMetric() { }
 #pragma warning restore CS8618
     }
 }

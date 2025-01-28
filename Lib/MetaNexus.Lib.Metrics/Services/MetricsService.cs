@@ -1,75 +1,83 @@
-﻿using MetaNexus.Lib.Metrics.Host.Abstractions;
+﻿using MetaNexus.Lib.Metrics.Abstractions;
 using MetaNexus.Lib.Metrics.Models;
-using MetaNexus.Lib.Metrics.Services.Abstractions;
-using Microsoft.Extensions.Logging;
-using OpenTelemetry.Metrics;
 using System.Diagnostics.Metrics;
 
 namespace MetaNexus.Lib.Metrics.Services
 {
+    /// <summary>
+    /// Сервис для работы с метриками.
+    /// </summary>
     internal class MetricsService : IMetricsService
     {
-        private readonly Meter _meter;
         private readonly IMetricsHost _metricsHost;
-        private readonly ILogger<MetricsService> _logger;
-        private readonly Dictionary<string, object> _metricCache;
-        private readonly MeterProvider _meterProvider;
 
-        public MetricsService(Meter meter, IMetricsHost metricsHost, ILogger<MetricsService> logger, MeterProvider meterProvider)
+        /// <summary>
+        /// Инициализирует новый экземпляр сервиса метрик.
+        /// </summary>
+        /// <param name="metricsHost">Объект, предоставляющий доступ к метрикам.</param>
+        public MetricsService(IMetricsHost metricsHost)
         {
-            _meter = meter;
-            _metricsHost = metricsHost;
-            _logger = logger;
-            _metricCache = new Dictionary<string, object>();
-            _meterProvider = meterProvider;
+            _metricsHost = metricsHost ?? throw new ArgumentNullException(nameof(metricsHost));
         }
 
-        public void SubmitMetric(string name, double value, IEnumerable<MetricLabel>? labels = null)
+        /// <summary>
+        /// Приватный метод для обработки метрики.
+        /// </summary>
+        /// <param name="metricName">Название метрики.</param>
+        /// <param name="value">Значение метрики.</param>
+        /// <param name="labels">Метки метрики.</param>
+        private void ProcessMetricInternal(string metricName, double value = 0, IEnumerable<KeyValuePair<string, object>> labels = null)
         {
+            var metric = _metricsHost.GetMetric<Instrument>(metricName);
+
+            var tags = labels ?? Enumerable.Empty<KeyValuePair<string, object>>();
+
+            switch (metric)
+            {
+                case Counter<long> counter:
+                    counter.Add((long)value, tags.ToArray());
+                    break;
+
+                case Gauge<double> gauge:
+                    gauge.Record(value, tags.ToArray());
+                    break;
+
+                case Histogram<double> histogram:
+                    histogram.Record(value, tags.ToArray());
+                    break;
+
+                default:
+                    throw new InvalidOperationException($"Unsupported metric type for '{metricName}'.");
+            }
+        }
+
+        /// <summary>
+        /// Обрабатывает метрику, переданную через объект <see cref="RawMetric"/>.
+        /// </summary>
+        /// <param name="metric">Объект метрики для обработки.</param>
+        public void ProcessMetric(RawMetric metric)
+        {
+            if (metric == null)
+                throw new ArgumentNullException(nameof(metric), "Metric cannot be null.");
+
+            string metricName = metric.Name;
+            double metricValue = metric.Value;
+
+            var labels = metric.Labels != null
+                ? metric.Labels.Select(label => new KeyValuePair<string, object>(label.Key, label.Value))
+                : Enumerable.Empty<KeyValuePair<string, object>>();
+
             try
             {
-                var metric = _metricsHost.GetMetric(name, value, labels);
-
-                var tagList = metric.Labels?.Select(label => new KeyValuePair<string, object>(label.Key, label.Value)).ToArray() ?? Array.Empty<KeyValuePair<string, object>>();
-
-                _logger.LogInformation($"Submitting metric: {metric.Name}, Value: {metric.Value}, Labels: {string.Join(", ", tagList)}");
-
-                if (!_metricCache.TryGetValue(metric.Name, out var registeredMetric))
-                {
-                    registeredMetric = metric.Type switch
-                    {
-                        Models.MetricType.Counter => _meter.CreateCounter<double>(metric.Name),
-                        Models.MetricType.Gauge => _meter.CreateGauge<double>(metric.Name),
-                        Models.MetricType.Histogram => _meter.CreateHistogram<double>(metric.Name),
-                        _ => throw new InvalidOperationException($"Unsupported metric type: {metric.Type}")
-                    };
-
-                    _metricCache[metric.Name] = registeredMetric;
-                }
-
-#pragma warning disable CS8620
-                switch (metric.Type)
-                {
-                    case Models.MetricType.Counter:
-                        ((Counter<double>)registeredMetric).Add(metric.Value, tagList);
-                        break;
-
-                    case Models.MetricType.Gauge:
-                        ((Gauge<double>)registeredMetric).Record(metric.Value, tagList);
-                        break;
-
-                    case Models.MetricType.Histogram:
-                        ((Histogram<double>)registeredMetric).Record(metric.Value, tagList);
-                        break;
-
-                    default:
-                        throw new InvalidOperationException($"Unsupported metric type: {metric.Type}");
-                }
-#pragma warning restore CS8620
+                ProcessMetricInternal(metricName, metricValue, labels);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException($"Error processing metric '{metricName}'. Ensure the metric type is supported.", ex);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error submitting metric");
+                throw new InvalidOperationException($"An error occurred while processing metric '{metricName}'.", ex);
             }
         }
     }

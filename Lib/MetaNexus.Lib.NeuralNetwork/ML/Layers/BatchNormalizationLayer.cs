@@ -28,8 +28,8 @@ namespace MetaNexus.Lib.NeuralNetwork.ML.Layers
             β = new Tensor(new[] { size }).Fill(0.0f); // Смещение, начальное значение = 0
 
             // Инициализация скользящих значений
-            movingMean = new Tensor(new[] { size }).Fill(0.0f); // Среднее
-            movingVariance = new Tensor(new[] { size }).Fill(1.0f); // Дисперсия
+            movingMean = new Tensor(new[] { 1, size }).Fill(0.0f); // Среднее
+            movingVariance = new Tensor(new[] { 1, size }).Fill(1.0f); // Дисперсия
         }
 
         /// <summary>

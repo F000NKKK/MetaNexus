@@ -22,7 +22,7 @@ namespace MetaNexus.App.DemoApp
 
         public async void TrainAndPredict()
         {
-            _metricsService.SubmitMetric(MetricNames.NEURAL_NETWORK_SERVICE_RUNS_TOTAL, 1, new List<MetricLabel>() { new MetricLabel("environment-os-version", $"{Environment.OSVersion}") });
+            _metricsService.SubmitMetric(MetricNames.NEURAL_NETWORK_SERVICE_RUNS_TOTAL, 1, new List<RawMetricLabel>() { new RawMetricLabel("environment-os-version", $"{Environment.OSVersion}") });
 
             // Обучение сети
             Console.WriteLine("Начало обучения...");

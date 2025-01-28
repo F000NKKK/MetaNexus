@@ -3,7 +3,7 @@
     /// <summary>
     /// Метка метрики.
     /// </summary>
-    public class MetricLabel
+    public class RawMetricLabel
     {
         private string _key;
         private string _value;
@@ -42,7 +42,7 @@
         /// </summary>
         /// <param name="key">Ключ метки.</param>
         /// <param name="value">Значение метки.</param>
-        public MetricLabel(string key, string value)
+        public RawMetricLabel(string key, string value)
         {
             Key = key;
             Value = value;
@@ -51,7 +51,7 @@
         /// <summary>
         /// Конструктор для десериализации.
         /// </summary>
-        protected MetricLabel() { }
+        protected RawMetricLabel() { }
 #pragma warning restore CS8618
     }
 }
