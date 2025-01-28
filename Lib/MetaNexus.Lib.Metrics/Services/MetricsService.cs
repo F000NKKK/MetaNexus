@@ -1,5 +1,6 @@
 ﻿using MetaNexus.Lib.Metrics.Abstractions;
 using MetaNexus.Lib.Metrics.Models;
+using OpenTelemetry.Metrics;
 
 namespace MetaNexus.Lib.Metrics.Services
 {
@@ -9,14 +10,16 @@ namespace MetaNexus.Lib.Metrics.Services
     internal class MetricsService : IMetricsService
     {
         private readonly IMetricsHost _metricsHost;
+        private readonly MeterProvider _meterProvider;
 
         /// <summary>
         /// Инициализирует новый экземпляр сервиса метрик.
         /// </summary>
         /// <param name="metricsHost">Объект, предоставляющий доступ к метрикам.</param>
-        public MetricsService(IMetricsHost metricsHost)
+        public MetricsService(IMetricsHost metricsHost, MeterProvider meterProvider)
         {
             _metricsHost = metricsHost ?? throw new ArgumentNullException(nameof(metricsHost));
+            _meterProvider = meterProvider;
         }
 
         /// <summary>
@@ -65,6 +68,7 @@ namespace MetaNexus.Lib.Metrics.Services
             try
             {
                 ProcessMetricInternal(metric.MetricType, metric.Name, metric.Value, labels);
+                _meterProvider.ForceFlush(1000);
             }
             catch (InvalidOperationException ex)
             {

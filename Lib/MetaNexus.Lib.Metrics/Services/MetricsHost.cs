@@ -14,7 +14,7 @@ namespace MetaNexus.Lib.Metrics.Services
 
         public MetricsHost(string metricsHostName, string? version)
         {
-            _meter = new Meter(metricsHostName);
+            _meter = new Meter(metricsHostName, version: version);
             _counterMetrics = new Dictionary<string, Counter<double>>();
             _gaugeMetrics = new Dictionary<string, Gauge<double>>();
             _histogramMetrics = new Dictionary<string, Histogram<double>>();

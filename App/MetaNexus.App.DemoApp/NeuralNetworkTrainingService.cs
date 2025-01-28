@@ -12,13 +12,11 @@ namespace MetaNexus.App.DemoApp
     {
         private readonly SimpleNeuralNetwork _simpleNeuralNetwork;
         private readonly IMetricsService _metricsService;
-        private readonly MeterProvider _meterProvider;
 
-        public NeuralNetworkTrainingService(SimpleNeuralNetwork simpleNeuralNetwork, IMetricsService metricsService, MeterProvider meterProvider)
+        public NeuralNetworkTrainingService(SimpleNeuralNetwork simpleNeuralNetwork, IMetricsService metricsService)
         {
             _simpleNeuralNetwork = simpleNeuralNetwork;
             _metricsService = metricsService;
-            _meterProvider = meterProvider;
         }
 
         public async void TrainAndPredict()

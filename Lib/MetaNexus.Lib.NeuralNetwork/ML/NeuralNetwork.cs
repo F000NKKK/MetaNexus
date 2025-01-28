@@ -4,6 +4,7 @@ using MetaNexus.Lib.Metrics.Models;
 using MetaNexus.Lib.NeuralNetwork.ML.Abstractions;
 using MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions;
 using MetaNexus.Lib.NeuralNetwork.Tensors;
+using OpenTelemetry.Metrics;
 using System.Diagnostics.Metrics;
 
 public class NeuralNetwork : INetwork

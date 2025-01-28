@@ -1,4 +1,5 @@
 ﻿using MetaNexus.Lib.Metrics.Models;
+using OpenTelemetry.Metrics;
 
 namespace MetaNexus.Lib.Metrics.Abstractions
 {

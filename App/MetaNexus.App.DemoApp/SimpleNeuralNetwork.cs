@@ -1,5 +1,6 @@
 ﻿using MetaNexus.Lib.Metrics.Abstractions;
 using MetaNexus.Lib.NeuralNetwork.Tensors;
+using OpenTelemetry.Metrics;
 
 namespace MetaNexus.App.DemoApp
 {

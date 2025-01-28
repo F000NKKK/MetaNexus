@@ -39,7 +39,7 @@ namespace MetaNexus.Lib.Metrics
                 string otlpEndpoint = config["OpenTelemetry:Endpoint"] ?? "http://localhost:4317";
 
                 var resourceBuilder = ResourceBuilder.CreateDefault()
-                    .AddService(metricsHostName)
+                    .AddService(metricsHostName, serviceVersion: typeof(IoCModule).Assembly.GetName().Version?.ToString())
                     .AddAttributes(new List<KeyValuePair<string, object>>
                     {
                         new KeyValuePair<string, object>("env", config["EnvironmentName"] ?? "DefaultEnv")
