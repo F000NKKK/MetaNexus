@@ -8,6 +8,7 @@
         private string _name;
         private IEnumerable<RawMetricLabel> _labels;
         private double _value;
+        private MetricTypes _metricType;
 
         /// <summary>
         /// Название метрики.
@@ -52,6 +53,23 @@
             }
         }
 
+        /// <summary>
+        /// Тип метрики
+        /// </summary>
+        public MetricTypes MetricType
+        {
+            get => _metricType;
+            set
+            {
+                if (!Enum.IsDefined(typeof(MetricTypes), value))
+                {
+                    throw new ArgumentException("Invalid MetricType value.", nameof(value));
+                }
+
+                _metricType = value;
+            }
+        }
+
 #pragma warning disable CS8618
         /// <summary>
         /// Конструктор для создания события метрики.
@@ -59,8 +77,9 @@
         /// <param name="name">Название метрики.</param>
         /// <param name="labels">Метки (ключ-значение).</param>
         /// <param name="value">Значение метрики.</param>
-        public RawMetric(string name, IEnumerable<RawMetricLabel>? labels, double value)
+        public RawMetric(MetricTypes metricType, string name, IEnumerable<RawMetricLabel>? labels, double value)
         {
+            MetricType = metricType;
             Name = name;
             Labels = labels;
             Value = value;

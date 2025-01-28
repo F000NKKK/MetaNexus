@@ -1,6 +1,5 @@
 ﻿using MetaNexus.Lib.Metrics.Abstractions;
 using MetaNexus.Lib.Metrics.Models;
-using System.Diagnostics.Metrics;
 
 namespace MetaNexus.Lib.Metrics.Services
 {
@@ -26,30 +25,29 @@ namespace MetaNexus.Lib.Metrics.Services
         /// <param name="metricName">Название метрики.</param>
         /// <param name="value">Значение метрики.</param>
         /// <param name="labels">Метки метрики.</param>
-        private void ProcessMetricInternal(string metricName, double value = 0, IEnumerable<KeyValuePair<string, object>> labels = null)
+        private void ProcessMetricInternal(MetricTypes metricType, string metricName, double value = 0, IEnumerable<KeyValuePair<string, object?>> labels = null)
         {
-            var metric = _metricsHost.GetMetric<Instrument>(metricName);
+            var tags = labels.ToArray() ?? Enumerable.Empty<KeyValuePair<string, object?>>().ToArray();
 
-            var tags = labels ?? Enumerable.Empty<KeyValuePair<string, object>>();
-
-            switch (metric)
+            if (metricType == MetricTypes.Counter)
             {
-                case Counter<long> counter:
-                    counter.Add((long)value, tags.ToArray());
-                    break;
-
-                case Gauge<double> gauge:
-                    gauge.Record(value, tags.ToArray());
-                    break;
-
-                case Histogram<double> histogram:
-                    histogram.Record(value, tags.ToArray());
-                    break;
-
-                default:
-                    throw new InvalidOperationException($"Unsupported metric type for '{metricName}'.");
+                _metricsHost.GetCounter(metricName).Add((long)value, tags);
+            }
+            else if (metricType == MetricTypes.Gauge)
+            {
+                _metricsHost.GetGauge(metricName).Record(value, tags);
+            }
+            else if (metricType == MetricTypes.Histogram)
+            {
+                _metricsHost.GetHistogram(metricName).Record(value, tags);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Unsupported metric type for '{metricName}' with type '{metricType.ToString()}'.");
             }
         }
+
+
 
         /// <summary>
         /// Обрабатывает метрику, переданную через объект <see cref="RawMetric"/>.
@@ -60,24 +58,21 @@ namespace MetaNexus.Lib.Metrics.Services
             if (metric == null)
                 throw new ArgumentNullException(nameof(metric), "Metric cannot be null.");
 
-            string metricName = metric.Name;
-            double metricValue = metric.Value;
-
             var labels = metric.Labels != null
-                ? metric.Labels.Select(label => new KeyValuePair<string, object>(label.Key, label.Value))
-                : Enumerable.Empty<KeyValuePair<string, object>>();
+                ? metric.Labels.Select(label => new KeyValuePair<string, object?>(label.Key, label.Value))
+                : Enumerable.Empty<KeyValuePair<string, object?>>();
 
             try
             {
-                ProcessMetricInternal(metricName, metricValue, labels);
+                ProcessMetricInternal(metric.MetricType, metric.Name, metric.Value, labels);
             }
             catch (InvalidOperationException ex)
             {
-                throw new InvalidOperationException($"Error processing metric '{metricName}'. Ensure the metric type is supported.", ex);
+                throw new InvalidOperationException($"Error processing metric '{metric.Name}'. Ensure the metric type is supported.", ex);
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"An error occurred while processing metric '{metricName}'.", ex);
+                throw new InvalidOperationException($"An error occurred while processing metric '{metric.Name}'.", ex);
             }
         }
     }

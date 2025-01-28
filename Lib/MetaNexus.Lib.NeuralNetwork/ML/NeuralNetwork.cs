@@ -1,9 +1,10 @@
-﻿using MetaNexus.Lib.Metrics.Host;
+﻿using MetaNexus.Lib.Metrics.Abstractions;
+using MetaNexus.Lib.Metrics.Consts;
 using MetaNexus.Lib.Metrics.Models;
-using MetaNexus.Lib.Metrics.Services.Abstractions;
 using MetaNexus.Lib.NeuralNetwork.ML.Abstractions;
 using MetaNexus.Lib.NeuralNetwork.ML.Layers.Abstractions;
 using MetaNexus.Lib.NeuralNetwork.Tensors;
+using System.Diagnostics.Metrics;
 
 public class NeuralNetwork : INetwork
 {
@@ -29,7 +30,10 @@ public class NeuralNetwork : INetwork
         foreach (var layer in layers)
         {
             output = layer.Forward(output);
-            _metricsService.SubmitMetric(MetricNames.PREDICTS_INPUT_OUTPUT_DATA, 1, new List<RawMetricLabel>() { new RawMetricLabel("input", $"{input.ToString()}"), new RawMetricLabel("output", $"{output.ToString()}") });
+            _metricsService.Submit(new RawMetric(MetricTypes.Gauge, MetricsNames.PREDICTS_INPUT_OUTPUT_DATA, new List<RawMetricLabel>()
+                {
+                    new RawMetricLabel("input", $"{input.ToString()}"), new RawMetricLabel("output", $"{output.ToString()}")
+                }, ONE_PREDICT_METRIC_VALUE));
         }
 
         return output;
@@ -69,4 +73,6 @@ public class NeuralNetwork : INetwork
     {
         layers.Add(layer);
     }
+
+    private const int ONE_PREDICT_METRIC_VALUE = 1;
 }

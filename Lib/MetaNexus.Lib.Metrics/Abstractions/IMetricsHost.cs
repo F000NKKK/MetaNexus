@@ -4,6 +4,8 @@ namespace MetaNexus.Lib.Metrics.Abstractions
 {
     internal interface IMetricsHost
     {
-        T GetMetric<T>(string metricName) where T : Instrument;
+        Counter<double> GetCounter(string metricName);
+        Gauge<double> GetGauge(string metricName);
+        Histogram<double> GetHistogram(string metricName);
     }
 }

@@ -8,51 +8,86 @@ namespace MetaNexus.Lib.Metrics.Services
     internal class MetricsHost : IMetricsHost
     {
         private readonly Meter _meter;
-        private readonly Dictionary<string, Instrument> _metrics;
+        private readonly Dictionary<string, Counter<double>> _counterMetrics;
+        private readonly Dictionary<string, Gauge<double>> _gaugeMetrics;
+        private readonly Dictionary<string, Histogram<double>> _histogramMetrics;
 
-        // Конструктор
         public MetricsHost(string metricsHostName, string? version)
         {
-            _meter = new Meter(metricsHostName);  // Здесь создаем Meter напрямую, без использования GetMeter
-            _metrics = new Dictionary<string, Instrument>();
+            _meter = new Meter(metricsHostName);
+            _counterMetrics = new Dictionary<string, Counter<double>>();
+            _gaugeMetrics = new Dictionary<string, Gauge<double>>();
+            _histogramMetrics = new Dictionary<string, Histogram<double>>();
 
-            // Инициализируем метрики
             RegisterMetrics();
         }
 
-        // Метод регистрации метрик
         private void RegisterMetrics()
         {
-            RegisterMetric(MetricsNames.CPU_USAGE, _meter.CreateCounter<long>(MetricsNames.CPU_USAGE));
-            RegisterMetric(MetricsNames.MEMORY_USAGE, _meter.CreateGauge<double>(MetricsNames.MEMORY_USAGE));
-            RegisterMetric(MetricsNames.REQUEST_COUNT, _meter.CreateCounter<long>(MetricsNames.REQUEST_COUNT));
-            RegisterMetric(MetricsNames.ERROR_COUNT, _meter.CreateCounter<long>(MetricsNames.ERROR_COUNT));
-            RegisterMetric(MetricsNames.REQUEST_DURATION, _meter.CreateHistogram<double>(MetricsNames.REQUEST_DURATION));
+            RegisterCounterMetric(MetricsNames.CPU_USAGE, _meter.CreateCounter<double>(MetricsNames.CPU_USAGE));
+            RegisterCounterMetric(MetricsNames.REQUEST_COUNT, _meter.CreateCounter<double>(MetricsNames.REQUEST_COUNT));
+            RegisterCounterMetric(MetricsNames.ERROR_COUNT, _meter.CreateCounter<double>(MetricsNames.ERROR_COUNT));
+
+            RegisterHistogramMetric(MetricsNames.REQUEST_DURATION, _meter.CreateHistogram<double>(MetricsNames.REQUEST_DURATION));
+
+            RegisterGaugeMetric(MetricsNames.MEMORY_USAGE, _meter.CreateGauge<double>(MetricsNames.MEMORY_USAGE));
+            RegisterGaugeMetric(MetricsNames.NEURAL_NETWORK_SERVICE_RUNS_TOTAL, _meter.CreateGauge<double>(MetricsNames.NEURAL_NETWORK_SERVICE_RUNS_TOTAL));
+            RegisterGaugeMetric(MetricsNames.PREDICTS_INPUT_OUTPUT_DATA, _meter.CreateGauge<double>(MetricsNames.PREDICTS_INPUT_OUTPUT_DATA));
         }
 
-        // Метод для безопасной регистрации метрики
-        private void RegisterMetric(string metricName, Instrument metric)
+        private void RegisterCounterMetric(string metricName, Counter<double> metric)
         {
-            if (!_metrics.ContainsKey(metricName))
+            if (!_counterMetrics.ContainsKey(metricName))
             {
-                _metrics[metricName] = metric;
+                _counterMetrics[metricName] = metric;
             }
         }
 
-        // Метод получения метрики по имени через индексатор
-        public T GetMetric<T>(string metricName) where T : Instrument
+        private void RegisterGaugeMetric(string metricName, Gauge<double> metric)
         {
-            if (_metrics.TryGetValue(metricName, out var metric))
+            if (!_counterMetrics.ContainsKey(metricName))
             {
-                // Проверяем, что метрика соответствует ожидаемому типу
-                if (metric is T typedMetric)
-                {
-                    return typedMetric;
-                }
-                else
-                {
-                    throw new InvalidCastException($"Metric '{metricName}' is not of type '{typeof(T)}'.");
-                }
+                _gaugeMetrics[metricName] = metric;
+            }
+        }
+
+        private void RegisterHistogramMetric(string metricName, Histogram<double> metric)
+        {
+            if (!_counterMetrics.ContainsKey(metricName))
+            {
+                _histogramMetrics[metricName] = metric;
+            }
+        }
+
+        public Counter<double> GetCounter(string metricName)
+        {
+            if (_counterMetrics.TryGetValue(metricName, out var metric))
+            {
+                return metric;
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Metric with name '{metricName}' not found.");
+            }
+        }
+
+        public Gauge<double> GetGauge(string metricName)
+        {
+            if (_gaugeMetrics.TryGetValue(metricName, out var metric))
+            {
+                return metric;
+            }
+            else
+            {
+                throw new KeyNotFoundException($"Metric with name '{metricName}' not found.");
+            }
+        }
+
+        public Histogram<double> GetHistogram(string metricName)
+        {
+            if (_histogramMetrics.TryGetValue(metricName, out var metric))
+            {
+                return metric;
             }
             else
             {

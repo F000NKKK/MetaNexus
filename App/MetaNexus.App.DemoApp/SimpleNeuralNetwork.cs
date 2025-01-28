@@ -1,4 +1,4 @@
-﻿using MetaNexus.Lib.Metrics.Services.Abstractions;
+﻿using MetaNexus.Lib.Metrics.Abstractions;
 using MetaNexus.Lib.NeuralNetwork.Tensors;
 
 namespace MetaNexus.App.DemoApp

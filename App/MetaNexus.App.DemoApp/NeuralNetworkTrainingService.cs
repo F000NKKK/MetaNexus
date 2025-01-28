@@ -4,6 +4,7 @@ using MetaNexus.Lib.Metrics.Consts;
 using MetaNexus.Lib.Metrics.Models;
 using MetaNexus.Lib.NeuralNetwork.Tensors;
 using OpenTelemetry.Metrics;
+using System.Diagnostics.Metrics;
 
 namespace MetaNexus.App.DemoApp
 {
@@ -22,7 +23,7 @@ namespace MetaNexus.App.DemoApp
 
         public async void TrainAndPredict()
         {
-            _metricsService.Submit(new RawMetric(MetricsNames.NEURAL_NETWORK_SERVICE_RUNS_TOTAL, new List<RawMetricLabel>()
+            _metricsService.Submit(new RawMetric(MetricTypes.Gauge, MetricsNames.NEURAL_NETWORK_SERVICE_RUNS_TOTAL, new List<RawMetricLabel>()
             {
                 new RawMetricLabel("environment-os-version", $"{Environment.OSVersion}")
             }, ONE_RUN_METRIC_VALUE));

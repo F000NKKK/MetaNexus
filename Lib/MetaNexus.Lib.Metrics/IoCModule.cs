@@ -1,17 +1,12 @@
 ﻿using Autofac;
 using MetaNexus.Lib.Metrics.Abstractions;
-using MetaNexus.Lib.Metrics.Host.Abstractions;
 using MetaNexus.Lib.Metrics.Services;
-using MetaNexus.Lib.Metrics.Services.Abstractions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using OpenTelemetry;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using System;
-using System.Collections.Generic;
 
 namespace MetaNexus.Lib.Metrics
 {
@@ -21,11 +16,10 @@ namespace MetaNexus.Lib.Metrics
         {
             builder.Register(c =>
             {
-                var env = c.Resolve<IHostEnvironment>();
                 var config = c.Resolve<IConfiguration>();
 
                 // Получаем имя хоста и endpoint для OTLP
-                string metricsHostName = env.ApplicationName;
+                string metricsHostName = config["ApplicationName"] ?? DEFAULT_APP_NAME;  // Можно брать из конфигурации
                 string otlpEndpoint = config["OpenTelemetry:Endpoint"] ?? "http://localhost:4317";
 
                 // Регистрируем и возвращаем экземпляр MetricsHost
@@ -40,16 +34,15 @@ namespace MetaNexus.Lib.Metrics
             // Создание и регистрация TracerProvider для OpenTelemetry
             builder.Register(c =>
             {
-                var env = c.Resolve<IHostEnvironment>();
                 var config = c.Resolve<IConfiguration>();
-                string metricsHostName = env.ApplicationName;
+                string metricsHostName = config["ApplicationName"] ?? DEFAULT_APP_NAME;  // Можно брать из конфигурации
                 string otlpEndpoint = config["OpenTelemetry:Endpoint"] ?? "http://localhost:4317";
 
                 var resourceBuilder = ResourceBuilder.CreateDefault()
                     .AddService(metricsHostName)
                     .AddAttributes(new List<KeyValuePair<string, object>>
                     {
-                        new KeyValuePair<string, object>("env", env.EnvironmentName)
+                        new KeyValuePair<string, object>("env", config["EnvironmentName"] ?? "DefaultEnv")
                     });
 
                 // Регистрация TracerProvider
@@ -69,9 +62,8 @@ namespace MetaNexus.Lib.Metrics
             // Создание и регистрация MeterProvider для OpenTelemetry
             builder.Register(c =>
             {
-                var env = c.Resolve<IHostEnvironment>();
                 var config = c.Resolve<IConfiguration>();
-                string metricsHostName = env.ApplicationName;
+                string metricsHostName = config["ApplicationName"] ?? DEFAULT_APP_NAME;  // Можно брать из конфигурации
                 string otlpEndpoint = config["OpenTelemetry:Endpoint"] ?? "http://localhost:4317";
 
                 // Регистрация MeterProvider
@@ -86,5 +78,7 @@ namespace MetaNexus.Lib.Metrics
                     .Build();
             }).SingleInstance();
         }
+
+        private const string DEFAULT_APP_NAME = "MetaNexus App";
     }
 }
