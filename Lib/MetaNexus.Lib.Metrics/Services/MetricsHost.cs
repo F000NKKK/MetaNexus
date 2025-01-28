@@ -1,4 +1,5 @@
 ﻿using MetaNexus.Lib.Metrics.Abstractions;
+using MetaNexus.Lib.Metrics.Consts;
 using OpenTelemetry.Metrics;
 using System.Diagnostics.Metrics;
 

@@ -1,7 +1,7 @@
 ﻿using MetaNexus.App.DemoApp.Abstractions;
-using MetaNexus.Lib.Metrics.Host;
+using MetaNexus.Lib.Metrics.Abstractions;
+using MetaNexus.Lib.Metrics.Consts;
 using MetaNexus.Lib.Metrics.Models;
-using MetaNexus.Lib.Metrics.Services.Abstractions;
 using MetaNexus.Lib.NeuralNetwork.Tensors;
 using OpenTelemetry.Metrics;
 
@@ -22,7 +22,10 @@ namespace MetaNexus.App.DemoApp
 
         public async void TrainAndPredict()
         {
-            _metricsService.SubmitMetric(MetricNames.NEURAL_NETWORK_SERVICE_RUNS_TOTAL, 1, new List<RawMetricLabel>() { new RawMetricLabel("environment-os-version", $"{Environment.OSVersion}") });
+            _metricsService.Submit(new RawMetric(MetricsNames.NEURAL_NETWORK_SERVICE_RUNS_TOTAL, new List<RawMetricLabel>()
+            {
+                new RawMetricLabel("environment-os-version", $"{Environment.OSVersion}")
+            }, ONE_RUN_METRIC_VALUE));
 
             // Обучение сети
             Console.WriteLine("Начало обучения...");
@@ -36,5 +39,7 @@ namespace MetaNexus.App.DemoApp
             // Вывод данных из тензора как строки
             Console.WriteLine($"Прогнозируем результат для ввода [5, 10]: {string.Join("; ", output.Data.Span.ToArray())}");
         }
+
+        private const int ONE_RUN_METRIC_VALUE = 1;
     }
 }

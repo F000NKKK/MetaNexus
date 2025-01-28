@@ -55,7 +55,7 @@ namespace MetaNexus.Lib.Metrics.Services
         /// Обрабатывает метрику, переданную через объект <see cref="RawMetric"/>.
         /// </summary>
         /// <param name="metric">Объект метрики для обработки.</param>
-        public void ProcessMetric(RawMetric metric)
+        public void Submit(RawMetric metric)
         {
             if (metric == null)
                 throw new ArgumentNullException(nameof(metric), "Metric cannot be null.");

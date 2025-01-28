@@ -1,6 +1,9 @@
-﻿namespace MetaNexus.Lib.Metrics.Abstractions
+﻿using MetaNexus.Lib.Metrics.Models;
+
+namespace MetaNexus.Lib.Metrics.Abstractions
 {
-    internal interface IMetricsService
+    public interface IMetricsService
     {
+        void Submit(RawMetric metric);
     }
 }
